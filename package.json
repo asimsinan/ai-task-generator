@@ -1,5 +1,5 @@
 {
-  "name": "ai-task-manager",
+  "name": "asy-task-manager",
   "version": "1.0.0",
   "description": "A task management system for ambitious AI-driven development that doesn't overwhelm and confuse Cursor.",
   "main": "index.js",
@@ -68,11 +68,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eyaltoledano/claude-task-master.git"
+    "url": "git+https://github.com/asimsinan/asy-task-manager.git"
   },
-  "homepage": "https://github.com/eyaltoledano/claude-task-master#readme",
+  "homepage": "https://github.com/asimsinan/asy-task-manager#readme",
   "bugs": {
-    "url": "https://github.com/eyaltoledano/claude-task-master/issues"
+    "url": "https://github.com/asimsinan/asy-task-manager/issues"
   },
   "files": [
     "scripts/init.js",

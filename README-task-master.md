@@ -1,6 +1,7 @@
-# Task Master
+# ASY TASK MANAGER
 
-### by [@eyaltoledano](https://x.com/eyaltoledano)
+## Fork of Task Master by [@eyaltoledano](https://x.com/eyaltoledano)
+
 
 A task management system for AI-driven development with Claude and OpenAI, designed to work seamlessly with Cursor AI.
 
