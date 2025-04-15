@@ -1,11 +1,11 @@
 # Example Cursor AI Interactions
 
-Here are some common interactions with Cursor AI when using Task Master:
+Here are some common interactions with Cursor AI when using AI Task Generator:
 
 ## Starting a new project
 
 ```
-I've just initialized a new project with Claude Task Master. I have a PRD at scripts/prd.txt.
+I've just initialized a new project with Claude AI Task Generator. I have a PRD at scripts/prd.txt.
 Can you help me parse it and set up the initial tasks?
 ```
 

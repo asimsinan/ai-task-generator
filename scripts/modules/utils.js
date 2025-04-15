@@ -1,6 +1,6 @@
 /**
  * utils.js
- * Utility functions for the Task Master CLI
+ * Utility functions for the AI Task Generator CLI
  */
 
 import fs from 'fs';
@@ -19,7 +19,7 @@ const CONFIG = {
 	logLevel: process.env.LOG_LEVEL || 'info',
 	defaultSubtasks: parseInt(process.env.DEFAULT_SUBTASKS || '3'),
 	defaultPriority: process.env.DEFAULT_PRIORITY || 'medium',
-	projectName: process.env.PROJECT_NAME || 'Task Master',
+	projectName: process.env.PROJECT_NAME || 'AI Task Generator',
 	projectVersion: '1.5.0' // Hardcoded version - ALWAYS use this value, ignore environment variable
 };
 

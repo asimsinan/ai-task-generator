@@ -1,10 +1,10 @@
 {
     "mcpServers": {
-        "task-master-ai": {
+        "ai-task-generator": {
             "command": "npx",
             "args": [
                 "-y",
-                "task-master-mcp"
+                "ai-task-generator"
             ],
             "env": {
                 "ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY",

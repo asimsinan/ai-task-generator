@@ -1,6 +1,6 @@
 /**
  * ui.js
- * User interface functions for the Task Master CLI
+ * User interface functions for the AI Task Generator CLI
  */
 
 import chalk from 'chalk';
@@ -912,7 +912,7 @@ async function displayNextTask(tasksPath) {
 				chalk.yellow('No subtasks found. Consider breaking down this task:') +
 					'\n' +
 					chalk.white(
-						`Run: ${chalk.cyan(`task-master expand --id=${nextTask.id}`)}`
+						`Run: ${chalk.cyan(`ai-task-generator expand --id=${nextTask.id}`)}`
 					),
 				{
 					padding: { top: 0, bottom: 0, left: 1, right: 1 },
@@ -929,11 +929,11 @@ async function displayNextTask(tasksPath) {
 		boxen(
 			chalk.white.bold('Suggested Actions:') +
 				'\n' +
-				`${chalk.cyan('1.')} Mark as in-progress: ${chalk.yellow(`task-master set-status --id=${nextTask.id} --status=in-progress`)}\n` +
-				`${chalk.cyan('2.')} Mark as done when completed: ${chalk.yellow(`task-master set-status --id=${nextTask.id} --status=done`)}\n` +
+				`${chalk.cyan('1.')} Mark as in-progress: ${chalk.yellow(`ai-task-generator set-status --id=${nextTask.id} --status=in-progress`)}\n` +
+				`${chalk.cyan('2.')} Mark as done when completed: ${chalk.yellow(`ai-task-generator set-status --id=${nextTask.id} --status=done`)}\n` +
 				(nextTask.subtasks && nextTask.subtasks.length > 0
-					? `${chalk.cyan('3.')} Update subtask status: ${chalk.yellow(`task-master set-status --id=${nextTask.id}.1 --status=done`)}`
-					: `${chalk.cyan('3.')} Break down into subtasks: ${chalk.yellow(`task-master expand --id=${nextTask.id}`)}`),
+					? `${chalk.cyan('3.')} Update subtask status: ${chalk.yellow(`ai-task-generator set-status --id=${nextTask.id}.1 --status=done`)}`
+					: `${chalk.cyan('3.')} Break down into subtasks: ${chalk.yellow(`ai-task-generator expand --id=${nextTask.id}`)}`),
 			{
 				padding: { top: 0, bottom: 0, left: 1, right: 1 },
 				borderColor: 'green',
@@ -1049,9 +1049,9 @@ async function displayTaskById(tasksPath, taskId) {
 			boxen(
 				chalk.white.bold('Suggested Actions:') +
 					'\n' +
-					`${chalk.cyan('1.')} Mark as in-progress: ${chalk.yellow(`task-master set-status --id=${task.parentTask.id}.${task.id} --status=in-progress`)}\n` +
-					`${chalk.cyan('2.')} Mark as done when completed: ${chalk.yellow(`task-master set-status --id=${task.parentTask.id}.${task.id} --status=done`)}\n` +
-					`${chalk.cyan('3.')} View parent task: ${chalk.yellow(`task-master show --id=${task.parentTask.id}`)}`,
+					`${chalk.cyan('1.')} Mark as in-progress: ${chalk.yellow(`ai-task-generator set-status --id=${task.parentTask.id}.${task.id} --status=in-progress`)}\n` +
+					`${chalk.cyan('2.')} Mark as done when completed: ${chalk.yellow(`ai-task-generator set-status --id=${task.parentTask.id}.${task.id} --status=done`)}\n` +
+					`${chalk.cyan('3.')} View parent task: ${chalk.yellow(`ai-task-generator show --id=${task.parentTask.id}`)}`,
 				{
 					padding: { top: 0, bottom: 0, left: 1, right: 1 },
 					borderColor: 'green',
@@ -1406,7 +1406,7 @@ async function displayTaskById(tasksPath, taskId) {
 				chalk.yellow('No subtasks found. Consider breaking down this task:') +
 					'\n' +
 					chalk.white(
-						`Run: ${chalk.cyan(`task-master expand --id=${task.id}`)}`
+						`Run: ${chalk.cyan(`ai-task-generator expand --id=${task.id}`)}`
 					),
 				{
 					padding: { top: 0, bottom: 0, left: 1, right: 1 },
@@ -1423,11 +1423,11 @@ async function displayTaskById(tasksPath, taskId) {
 		boxen(
 			chalk.white.bold('Suggested Actions:') +
 				'\n' +
-				`${chalk.cyan('1.')} Mark as in-progress: ${chalk.yellow(`task-master set-status --id=${task.id} --status=in-progress`)}\n` +
-				`${chalk.cyan('2.')} Mark as done when completed: ${chalk.yellow(`task-master set-status --id=${task.id} --status=done`)}\n` +
+				`${chalk.cyan('1.')} Mark as in-progress: ${chalk.yellow(`ai-task-generator set-status --id=${task.id} --status=in-progress`)}\n` +
+				`${chalk.cyan('2.')} Mark as done when completed: ${chalk.yellow(`ai-task-generator set-status --id=${task.id} --status=done`)}\n` +
 				(task.subtasks && task.subtasks.length > 0
-					? `${chalk.cyan('3.')} Update subtask status: ${chalk.yellow(`task-master set-status --id=${task.id}.1 --status=done`)}`
-					: `${chalk.cyan('3.')} Break down into subtasks: ${chalk.yellow(`task-master expand --id=${task.id}`)}`),
+					? `${chalk.cyan('3.')} Update subtask status: ${chalk.yellow(`ai-task-generator set-status --id=${task.id}.1 --status=done`)}`
+					: `${chalk.cyan('3.')} Break down into subtasks: ${chalk.yellow(`ai-task-generator expand --id=${task.id}`)}`),
 			{
 				padding: { top: 0, bottom: 0, left: 1, right: 1 },
 				borderColor: 'green',
@@ -1617,7 +1617,7 @@ async function displayComplexityReport(reportPath) {
 
 	// When adding rows, don't truncate the expansion command
 	tasksNeedingExpansion.forEach((task) => {
-		const expansionCommand = `task-master expand --id=${task.taskId} --num=${task.recommendedSubtasks}${task.expansionPrompt ? ` --prompt="${task.expansionPrompt}"` : ''}`;
+		const expansionCommand = `ai-task-generator expand --id=${task.taskId} --num=${task.recommendedSubtasks}${task.expansionPrompt ? ` --prompt="${task.expansionPrompt}"` : ''}`;
 
 		complexTable.push([
 			task.taskId,
@@ -1669,9 +1669,9 @@ async function displayComplexityReport(reportPath) {
 		boxen(
 			chalk.white.bold('Suggested Actions:') +
 				'\n\n' +
-				`${chalk.cyan('1.')} Expand all complex tasks: ${chalk.yellow(`task-master expand --all`)}\n` +
-				`${chalk.cyan('2.')} Expand a specific task: ${chalk.yellow(`task-master expand --id=<id>`)}\n` +
-				`${chalk.cyan('3.')} Regenerate with research: ${chalk.yellow(`task-master analyze-complexity --research`)}`,
+				`${chalk.cyan('1.')} Expand all complex tasks: ${chalk.yellow(`ai-task-generator expand --all`)}\n` +
+				`${chalk.cyan('2.')} Expand a specific task: ${chalk.yellow(`ai-task-generator expand --id=<id>`)}\n` +
+				`${chalk.cyan('3.')} Regenerate with research: ${chalk.yellow(`ai-task-generator analyze-complexity --research`)}`,
 			{
 				padding: 1,
 				borderColor: 'cyan',

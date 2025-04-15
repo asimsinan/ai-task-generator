@@ -1,6 +1,6 @@
 /**
  * commands.js
- * Command-line interface for the Task Master CLI
+ * Command-line interface for the AI Task Generator CLI
  */
 
 import { program } from 'commander';
@@ -65,7 +65,7 @@ function registerCommands(programInstance) {
 		console.error(chalk.red(`Error: Unknown option '${unknownOption}'`));
 		console.error(
 			chalk.yellow(
-				`Run 'task-master ${commandName} --help' to see available options`
+				`Run 'ai-task-generator ${commandName} --help' to see available options`
 			)
 		);
 		process.exit(1);
@@ -137,7 +137,7 @@ function registerCommands(programInstance) {
 							'\n\n' +
 							chalk.cyan('Usage:') +
 							'\n' +
-							`  task-master parse-prd <prd-file.txt> [options]\n\n` +
+							`  ai-task-generator parse-prd <prd-file.txt> [options]\n\n` +
 							chalk.cyan('Options:') +
 							'\n' +
 							'  -i, --input <file>       Path to the PRD file (alternative to positional argument)\n' +
@@ -147,10 +147,10 @@ function registerCommands(programInstance) {
 							'  --prefer-claude          Use Claude instead of OpenAI for task generation\n\n' +
 							chalk.cyan('Example:') +
 							'\n' +
-							'  task-master parse-prd requirements.txt --num-tasks 15\n' +
-							'  task-master parse-prd --input=requirements.txt\n' +
-							'  task-master parse-prd --force\n' +
-							'  task-master parse-prd --prefer-claude\n\n' +
+							'  ai-task-generator parse-prd requirements.txt --num-tasks 15\n' +
+							'  ai-task-generator parse-prd --input=requirements.txt\n' +
+							'  ai-task-generator parse-prd --force\n' +
+							'  ai-task-generator parse-prd --prefer-claude\n\n' +
 							chalk.yellow('Note: This command will:') +
 							'\n' +
 							'  1. Look for a PRD file at scripts/prd.txt by default\n' +
@@ -211,7 +211,7 @@ function registerCommands(programInstance) {
 				);
 				console.log(chalk.yellow('\nTo update multiple tasks:'));
 				console.log(
-					`  task-master update --from=${fromId} --prompt="Your prompt here"`
+					`  ai-task-generator update --from=${fromId} --prompt="Your prompt here"`
 				);
 				console.log(
 					chalk.yellow(
@@ -219,7 +219,7 @@ function registerCommands(programInstance) {
 					)
 				);
 				console.log(
-					`  task-master update-task --id=<id> --prompt="Your prompt here"`
+					`  ai-task-generator update-task --id=<id> --prompt="Your prompt here"`
 				);
 				process.exit(1);
 			}
@@ -274,7 +274,7 @@ function registerCommands(programInstance) {
 					console.error(chalk.red('Error: --id parameter is required'));
 					console.log(
 						chalk.yellow(
-							'Usage example: task-master update-task --id=23 --prompt="Update with new information"'
+							'Usage example: ai-task-generator update-task --id=23 --prompt="Update with new information"'
 						)
 					);
 					process.exit(1);
@@ -290,7 +290,7 @@ function registerCommands(programInstance) {
 					);
 					console.log(
 						chalk.yellow(
-							'Usage example: task-master update-task --id=23 --prompt="Update with new information"'
+							'Usage example: ai-task-generator update-task --id=23 --prompt="Update with new information"'
 						)
 					);
 					process.exit(1);
@@ -304,7 +304,7 @@ function registerCommands(programInstance) {
 					);
 					console.log(
 						chalk.yellow(
-							'Usage example: task-master update-task --id=23 --prompt="Update with new information"'
+							'Usage example: ai-task-generator update-task --id=23 --prompt="Update with new information"'
 						)
 					);
 					process.exit(1);
@@ -321,7 +321,7 @@ function registerCommands(programInstance) {
 					if (tasksPath === 'tasks/tasks.json') {
 						console.log(
 							chalk.yellow(
-								'Hint: Run task-master init or task-master parse-prd to create tasks.json first'
+								'Hint: Run ai-task-generator init or ai-task-generator parse-prd to create tasks.json first'
 							)
 						);
 					} else {
@@ -382,7 +382,7 @@ function registerCommands(programInstance) {
 				) {
 					console.log(chalk.yellow('\nTo fix this issue:'));
 					console.log(
-						'  1. Run task-master list to see all available task IDs'
+						'  1. Run ai-task-generator list to see all available task IDs'
 					);
 					console.log('  2. Use a valid task ID with the --id parameter');
 				} else if (error.message.includes('API key')) {
@@ -426,7 +426,7 @@ function registerCommands(programInstance) {
 					console.error(chalk.red('Error: --id parameter is required'));
 					console.log(
 						chalk.yellow(
-							'Usage example: task-master update-subtask --id=5.2 --prompt="Add more details about the API endpoint"'
+							'Usage example: ai-task-generator update-subtask --id=5.2 --prompt="Add more details about the API endpoint"'
 						)
 					);
 					process.exit(1);
@@ -442,7 +442,7 @@ function registerCommands(programInstance) {
 					);
 					console.log(
 						chalk.yellow(
-							'Usage example: task-master update-subtask --id=5.2 --prompt="Add more details about the API endpoint"'
+							'Usage example: ai-task-generator update-subtask --id=5.2 --prompt="Add more details about the API endpoint"'
 						)
 					);
 					process.exit(1);
@@ -456,7 +456,7 @@ function registerCommands(programInstance) {
 					);
 					console.log(
 						chalk.yellow(
-							'Usage example: task-master update-subtask --id=5.2 --prompt="Add more details about the API endpoint"'
+							'Usage example: ai-task-generator update-subtask --id=5.2 --prompt="Add more details about the API endpoint"'
 						)
 					);
 					process.exit(1);
@@ -473,7 +473,7 @@ function registerCommands(programInstance) {
 					if (tasksPath === 'tasks/tasks.json') {
 						console.log(
 							chalk.yellow(
-								'Hint: Run task-master init or task-master parse-prd to create tasks.json first'
+								'Hint: Run ai-task-generator init or ai-task-generator parse-prd to create tasks.json first'
 							)
 						);
 					} else {
@@ -535,7 +535,7 @@ function registerCommands(programInstance) {
 				) {
 					console.log(chalk.yellow('\nTo fix this issue:'));
 					console.log(
-						'  1. Run task-master list --with-subtasks to see all available subtask IDs'
+						'  1. Run ai-task-generator list --with-subtasks to see all available subtask IDs'
 					);
 					console.log(
 						'  2. Use a valid subtask ID with the --id parameter in format "parentId.subtaskId"'
@@ -1156,11 +1156,11 @@ function registerCommands(programInstance) {
 								chalk.white.bold('Next Steps:') +
 								'\n' +
 								chalk.cyan(
-									`1. Run ${chalk.yellow(`task-master show ${parentId}`)} to see the parent task with all subtasks`
+									`1. Run ${chalk.yellow(`ai-task-generator show ${parentId}`)} to see the parent task with all subtasks`
 								) +
 								'\n' +
 								chalk.cyan(
-									`2. Run ${chalk.yellow(`task-master set-status --id=${parentId}.${subtask.id} --status=in-progress`)} to start working on it`
+									`2. Run ${chalk.yellow(`ai-task-generator set-status --id=${parentId}.${subtask.id} --status=in-progress`)} to start working on it`
 								),
 							{
 								padding: 1,
@@ -1181,13 +1181,13 @@ function registerCommands(programInstance) {
 								chalk.white('Convert existing task to subtask:') +
 								'\n' +
 								chalk.yellow(
-									`  task-master add-subtask --parent=5 --task-id=8`
+									`  ai-task-generator add-subtask --parent=5 --task-id=8`
 								) +
 								'\n\n' +
 								chalk.white('Create new subtask:') +
 								'\n' +
 								chalk.yellow(
-									`  task-master add-subtask --parent=5 --title="Implement login UI" --description="Create the login form"`
+									`  ai-task-generator add-subtask --parent=5 --title="Implement login UI" --description="Create the login form"`
 								) +
 								'\n\n',
 							{ padding: 1, borderColor: 'blue', borderStyle: 'round' }
@@ -1214,7 +1214,7 @@ function registerCommands(programInstance) {
 					'\n\n' +
 					chalk.cyan('Usage:') +
 					'\n' +
-					`  task-master add-subtask --parent=<id> [options]\n\n` +
+					`  ai-task-generator add-subtask --parent=<id> [options]\n\n` +
 					chalk.cyan('Options:') +
 					'\n' +
 					'  -p, --parent <id>         Parent task ID (required)\n' +
@@ -1228,8 +1228,8 @@ function registerCommands(programInstance) {
 					'  --skip-generate           Skip regenerating task files\n\n' +
 					chalk.cyan('Examples:') +
 					'\n' +
-					'  task-master add-subtask --parent=5 --task-id=8\n' +
-					'  task-master add-subtask -p 5 -t "Implement login UI" -d "Create the login form"',
+					'  ai-task-generator add-subtask --parent=5 --task-id=8\n' +
+					'  ai-task-generator add-subtask -p 5 -t "Implement login UI" -d "Create the login form"',
 				{ padding: 1, borderColor: 'blue', borderStyle: 'round' }
 			)
 		);
@@ -1314,11 +1314,11 @@ function registerCommands(programInstance) {
 									chalk.white.bold('Next Steps:') +
 									'\n' +
 									chalk.cyan(
-										`1. Run ${chalk.yellow(`task-master show ${result.id}`)} to see details of the new task`
+										`1. Run ${chalk.yellow(`ai-task-generator show ${result.id}`)} to see details of the new task`
 									) +
 									'\n' +
 									chalk.cyan(
-										`2. Run ${chalk.yellow(`task-master set-status --id=${result.id} --status=in-progress`)} to start working on it`
+										`2. Run ${chalk.yellow(`ai-task-generator set-status --id=${result.id} --status=in-progress`)} to start working on it`
 									),
 								{
 									padding: 1,
@@ -1365,7 +1365,7 @@ function registerCommands(programInstance) {
 					'\n\n' +
 					chalk.cyan('Usage:') +
 					'\n' +
-					`  task-master remove-subtask --id=<parentId.subtaskId> [options]\n\n` +
+					`  ai-task-generator remove-subtask --id=<parentId.subtaskId> [options]\n\n` +
 					chalk.cyan('Options:') +
 					'\n' +
 					'  -i, --id <id>       Subtask ID(s) to remove in format "parentId.subtaskId" (can be comma-separated, required)\n' +
@@ -1374,9 +1374,9 @@ function registerCommands(programInstance) {
 					'  --skip-generate     Skip regenerating task files\n\n' +
 					chalk.cyan('Examples:') +
 					'\n' +
-					'  task-master remove-subtask --id=5.2\n' +
-					'  task-master remove-subtask --id=5.2,6.3,7.1\n' +
-					'  task-master remove-subtask --id=5.2 --convert',
+					'  ai-task-generator remove-subtask --id=5.2\n' +
+					'  ai-task-generator remove-subtask --id=5.2,6.3,7.1\n' +
+					'  ai-task-generator remove-subtask --id=5.2 --convert',
 				{ padding: 1, borderColor: 'blue', borderStyle: 'round' }
 			)
 		);
@@ -1399,7 +1399,7 @@ function registerCommands(programInstance) {
 			if (!taskId) {
 				console.error(chalk.red('Error: Task ID is required'));
 				console.error(
-					chalk.yellow('Usage: task-master remove-task --id=<taskId>')
+					chalk.yellow('Usage: ai-task-generator remove-task --id=<taskId>')
 				);
 				process.exit(1);
 			}
@@ -1531,7 +1531,7 @@ function registerCommands(programInstance) {
 	// init command (Directly calls the implementation from init.js)
 	programInstance
 		.command('init')
-		.description('Initialize a new project with Task Master structure')
+		.description('Initialize a new project with AI Task Generator structure')
 		.option('-y, --yes', 'Skip prompts and use default values')
 		.option('-n, --name <n>', 'Project name')
 		.option('-d, --description <description>', 'Project description')
@@ -1612,7 +1612,7 @@ function setupCLI() {
 }
 
 /**
- * Check for newer version of task-master-ai
+ * Check for newer version of ai-task-generator-ai
  * @returns {Promise<{currentVersion: string, latestVersion: string, needsUpdate: boolean}>}
  */
 async function checkForUpdate() {
@@ -1623,7 +1623,7 @@ async function checkForUpdate() {
 		const packageJsonPath = path.join(
 			process.cwd(),
 			'node_modules',
-			'task-master-ai',
+			'ai-task-generator-ai',
 			'package.json'
 		);
 		if (fs.existsSync(packageJsonPath)) {
@@ -1639,7 +1639,7 @@ async function checkForUpdate() {
 		// Get the latest version from npm registry
 		const options = {
 			hostname: 'registry.npmjs.org',
-			path: '/task-master-ai',
+			path: '/ai-task-generator-ai',
 			method: 'GET',
 			headers: {
 				Accept: 'application/vnd.npm.install-v1+json' // Lightweight response
@@ -1731,7 +1731,7 @@ function compareVersions(v1, v2) {
 function displayUpgradeNotification(currentVersion, latestVersion) {
 	const message = boxen(
 		`${chalk.blue.bold('Update Available!')} ${chalk.dim(currentVersion)} → ${chalk.green(latestVersion)}\n\n` +
-			`Run ${chalk.cyan('npm i task-master-ai@latest -g')} to update to the latest version with new features and bug fixes.`,
+			`Run ${chalk.cyan('npm i ai-task-generator-ai@latest -g')} to update to the latest version with new features and bug fixes.`,
 		{
 			padding: 1,
 			margin: { top: 1, bottom: 1 },

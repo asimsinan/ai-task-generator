@@ -1,6 +1,6 @@
 /**
  * ai-services.js
- * AI service interactions for the Task Master CLI
+ * AI service interactions for the AI Task Generator CLI
  */
 
 // NOTE/TODO: Include the beta header output-128k-2025-02-19 in your API request to increase the maximum output token length to 128k tokens for Claude 3.7 Sonnet.

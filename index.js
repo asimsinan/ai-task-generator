@@ -88,8 +88,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 	const program = new Command();
 
 	program
-		.name('task-master')
-		.description('Claude Task Master CLI')
+		.name('ai-task-generator')
+		.description('AI Task Generator CLI')
 		.version(version);
 
 	program

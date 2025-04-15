@@ -1,6 +1,6 @@
 # AI TASK GENERATOR
 
-## Fork of Task Master by [@eyaltoledano](https://github.com/eyaltoledano/claude-task-master). Added support for OPENAI
+## Fork of AI Task Generator by [@eyaltoledano](https://github.com/eyaltoledano/claude-ai-task-generator). Added support for OPENAI
 
 
 A task management system for AI-driven development with Claude and OpenAI, designed to work seamlessly with Cursor AI.
@@ -48,30 +48,47 @@ The script can be configured through environment variables in a `.env` file at t
 
 ```bash
 # Install globally
-npm install -g task-master-ai
+npm install -g ai-task-generator
 
 # OR install locally within your project
-npm install task-master-ai
+npm install ai-task-generator
 ```
 
 ### Initialize a new project
 
 ```bash
 # If installed globally
-task-master init
+ai-task-generator init
 
 # If installed locally
-npx task-master-init
+npx ai-task-generator-init
 ```
 
 This will prompt you for project details and set up a new project with the necessary files and structure.
 
+### Handling Deprecation Warnings
+
+If you encounter punycode module deprecation warnings when running the CLI, you have several options:
+
+```bash
+# Option 1: Use the no-warnings version of the command
+ai-task-generator-no-warnings <command>
+
+# Option 2: Use the npm start script (which suppresses warnings)
+npm start -- <command>
+
+# Option 3: Run with the Node.js --no-deprecation flag
+node --no-deprecation bin/ai-task-generator.js <command>
+```
+
+These solutions will suppress the Node.js deprecation warnings related to the punycode module.
+
 ## AI Model Support
 
-Task Master now supports both Claude (Anthropic) and GPT (OpenAI) models for task generation, analysis, and other AI operations. You can configure your preferred model using:
+AI Task Generator now supports both Claude (Anthropic) and GPT (OpenAI) models for task generation, analysis, and other AI operations. You can configure your preferred model using:
 
 - Environment variables: Set `ANTHROPIC_API_KEY` and/or `OPENAI_API_KEY` in your `.env` file
-- Command-line flags: Use `--prefer-openai` with commands like `task-master parse-prd`
+- Command-line flags: Use `--prefer-openai` with commands like `ai-task-generator parse-prd`
 - Configuration: Set `PREFER_OPENAI=true` in your `.env` file to default to OpenAI
 
 The system will automatically fall back to an alternative model if your preferred one is unavailable or overloaded.
@@ -87,7 +104,7 @@ The system will automatically fall back to an alternative model if your preferre
    - To use a CommonJS module, either:
      - Rename it with `.cjs` extension
      - Use `await import()` for dynamic imports
-   - If you need CommonJS throughout your project, remove `"type": "module"` from package.json, but Task Master scripts expect ESM.
+   - If you need CommonJS throughout your project, remove `"type": "module"` from package.json, but AI Task Generator scripts expect ESM.
 
 2. The Anthropic SDK version should be 0.39.0 or higher.
 
@@ -97,36 +114,36 @@ After installing the package globally, you can use these CLI commands from any d
 
 ```bash
 # Initialize a new project
-task-master init
+ai-task-generator init
 
 # Parse a PRD and generate tasks
-task-master parse-prd your-prd.txt
+ai-task-generator parse-prd your-prd.txt
 
 # List all tasks
-task-master list
+ai-task-generator list
 
 # Show the next task to work on
-task-master next
+ai-task-generator next
 
 # Generate task files
-task-master generate
+ai-task-generator generate
 ```
 
 ## Troubleshooting
 
-### If `task-master init` doesn't respond:
+### If `ai-task-generator init` doesn't respond:
 
 Try running it with Node directly:
 
 ```bash
-node node_modules/claude-task-master/scripts/init.js
+node node_modules/claude-ai-task-generator/scripts/init.js
 ```
 
 Or clone the repository and run:
 
 ```bash
-git clone https://github.com/eyaltoledano/claude-task-master.git
-cd claude-task-master
+git clone https://github.com/eyaltoledano/claude-ai-task-generator.git
+cd claude-ai-task-generator
 node scripts/init.js
 ```
 
@@ -148,7 +165,7 @@ Tasks in tasks.json have the following structure:
 
 ## Integrating with Cursor AI
 
-Claude Task Master is designed to work seamlessly with [Cursor AI](https://www.cursor.so/), providing a structured workflow for AI-driven development.
+Claude AI Task Generator is designed to work seamlessly with [Cursor AI](https://www.cursor.so/), providing a structured workflow for AI-driven development.
 
 ### Setup with Cursor
 
@@ -165,25 +182,25 @@ To enable enhanced task management capabilities directly within Cursor using the
 2. Navigate to the MCP section
 3. Click on "Add New MCP Server"
 4. Configure with the following details:
-   - Name: "Task Master"
+   - Name: "AI Task Generator"
    - Type: "Command"
-   - Command: "npx -y task-master-mcp"
+   - Command: "npx -y ai-task-generator-mcp"
 5. Save the settings
 
-Once configured, you can interact with Task Master's task management commands directly through Cursor's interface, providing a more integrated experience.
+Once configured, you can interact with AI Task Generator's task management commands directly through Cursor's interface, providing a more integrated experience.
 
 ### Initial Task Generation
 
 In Cursor's AI chat, instruct the agent to generate tasks from your PRD:
 
 ```
-Please use the task-master parse-prd command to generate tasks from my PRD. The PRD is located at scripts/prd.txt.
+Please use the ai-task-generator parse-prd command to generate tasks from my PRD. The PRD is located at scripts/prd.txt.
 ```
 
 The agent will execute:
 
 ```bash
-task-master parse-prd scripts/prd.txt
+ai-task-generator parse-prd scripts/prd.txt
 ```
 
 This will:
@@ -203,7 +220,7 @@ Please generate individual task files from tasks.json
 The agent will execute:
 
 ```bash
-task-master generate
+ai-task-generator generate
 ```
 
 This creates individual task files in the `tasks/` directory (e.g., `task_001.txt`, `task_002.txt`), making it easier to reference specific tasks.
@@ -222,8 +239,8 @@ What tasks are available to work on next?
 
 The agent will:
 
-- Run `task-master list` to see all tasks
-- Run `task-master next` to determine the next task to work on
+- Run `ai-task-generator list` to see all tasks
+- Run `ai-task-generator next` to determine the next task to work on
 - Analyze dependencies to determine which tasks are ready to be worked on
 - Prioritize tasks based on priority level and ID order
 - Suggest the next task(s) to implement
@@ -262,7 +279,7 @@ Task 3 is now complete. Please update its status.
 The agent will execute:
 
 ```bash
-task-master set-status --id=3 --status=done
+ai-task-generator set-status --id=3 --status=done
 ```
 
 ### 5. Handling Implementation Drift
@@ -282,7 +299,7 @@ We've changed our approach. We're now using Express instead of Fastify. Please u
 The agent will execute:
 
 ```bash
-task-master update --from=4 --prompt="Now we are using Express instead of Fastify."
+ai-task-generator update --from=4 --prompt="Now we are using Express instead of Fastify."
 ```
 
 This will rewrite or re-scope subsequent tasks in tasks.json while preserving completed work.
@@ -298,7 +315,7 @@ Task 5 seems complex. Can you break it down into subtasks?
 The agent will execute:
 
 ```bash
-task-master expand --id=5 --num=3
+ai-task-generator expand --id=5 --num=3
 ```
 
 You can provide additional context:
@@ -310,7 +327,7 @@ Please break down task 5 with a focus on security considerations.
 The agent will execute:
 
 ```bash
-task-master expand --id=5 --prompt="Focus on security aspects"
+ai-task-generator expand --id=5 --prompt="Focus on security aspects"
 ```
 
 You can also expand all pending tasks:
@@ -322,7 +339,7 @@ Please break down all pending tasks into subtasks.
 The agent will execute:
 
 ```bash
-task-master expand --all
+ai-task-generator expand --all
 ```
 
 For research-backed subtask generation using Perplexity AI:
@@ -334,7 +351,7 @@ Please break down task 5 using research-backed generation.
 The agent will execute:
 
 ```bash
-task-master expand --id=5 --research
+ai-task-generator expand --id=5 --research
 ```
 
 ## Command Reference
@@ -345,72 +362,72 @@ Here's a comprehensive reference of all available commands:
 
 ```bash
 # Parse a PRD file and generate tasks
-task-master parse-prd <prd-file.txt>
+ai-task-generator parse-prd <prd-file.txt>
 
 # Limit the number of tasks generated
-task-master parse-prd <prd-file.txt> --num-tasks=10
+ai-task-generator parse-prd <prd-file.txt> --num-tasks=10
 ```
 
 ### List Tasks
 
 ```bash
 # List all tasks
-task-master list
+ai-task-generator list
 
 # List tasks with a specific status
-task-master list --status=<status>
+ai-task-generator list --status=<status>
 
 # List tasks with subtasks
-task-master list --with-subtasks
+ai-task-generator list --with-subtasks
 
 # List tasks with a specific status and include subtasks
-task-master list --status=<status> --with-subtasks
+ai-task-generator list --status=<status> --with-subtasks
 ```
 
 ### Show Next Task
 
 ```bash
 # Show the next task to work on based on dependencies and status
-task-master next
+ai-task-generator next
 ```
 
 ### Show Specific Task
 
 ```bash
 # Show details of a specific task
-task-master show <id>
+ai-task-generator show <id>
 # or
-task-master show --id=<id>
+ai-task-generator show --id=<id>
 
 # View a specific subtask (e.g., subtask 2 of task 1)
-task-master show 1.2
+ai-task-generator show 1.2
 ```
 
 ### Update Tasks
 
 ```bash
 # Update tasks from a specific ID and provide context
-task-master update --from=<id> --prompt="<prompt>"
+ai-task-generator update --from=<id> --prompt="<prompt>"
 ```
 
 ### Generate Task Files
 
 ```bash
 # Generate individual task files from tasks.json
-task-master generate
+ai-task-generator generate
 ```
 
 ### Set Task Status
 
 ```bash
 # Set status of a single task
-task-master set-status --id=<id> --status=<status>
+ai-task-generator set-status --id=<id> --status=<status>
 
 # Set status for multiple tasks
-task-master set-status --id=1,2,3 --status=<status>
+ai-task-generator set-status --id=1,2,3 --status=<status>
 
 # Set status for subtasks
-task-master set-status --id=1.1,1.2 --status=<status>
+ai-task-generator set-status --id=1.1,1.2 --status=<status>
 ```
 
 When marking a task as "done", all of its subtasks will automatically be marked as "done" as well.
@@ -419,96 +436,96 @@ When marking a task as "done", all of its subtasks will automatically be marked 
 
 ```bash
 # Expand a specific task with subtasks
-task-master expand --id=<id> --num=<number>
+ai-task-generator expand --id=<id> --num=<number>
 
 # Expand with additional context
-task-master expand --id=<id> --prompt="<context>"
+ai-task-generator expand --id=<id> --prompt="<context>"
 
 # Expand all pending tasks
-task-master expand --all
+ai-task-generator expand --all
 
 # Force regeneration of subtasks for tasks that already have them
-task-master expand --all --force
+ai-task-generator expand --all --force
 
 # Research-backed subtask generation for a specific task
-task-master expand --id=<id> --research
+ai-task-generator expand --id=<id> --research
 
 # Research-backed generation for all tasks
-task-master expand --all --research
+ai-task-generator expand --all --research
 ```
 
 ### Clear Subtasks
 
 ```bash
 # Clear subtasks from a specific task
-task-master clear-subtasks --id=<id>
+ai-task-generator clear-subtasks --id=<id>
 
 # Clear subtasks from multiple tasks
-task-master clear-subtasks --id=1,2,3
+ai-task-generator clear-subtasks --id=1,2,3
 
 # Clear subtasks from all tasks
-task-master clear-subtasks --all
+ai-task-generator clear-subtasks --all
 ```
 
 ### Analyze Task Complexity
 
 ```bash
 # Analyze complexity of all tasks
-task-master analyze-complexity
+ai-task-generator analyze-complexity
 
 # Save report to a custom location
-task-master analyze-complexity --output=my-report.json
+ai-task-generator analyze-complexity --output=my-report.json
 
 # Use a specific LLM model
-task-master analyze-complexity --model=claude-3-opus-20240229
+ai-task-generator analyze-complexity --model=claude-3-opus-20240229
 
 # Set a custom complexity threshold (1-10)
-task-master analyze-complexity --threshold=6
+ai-task-generator analyze-complexity --threshold=6
 
 # Use an alternative tasks file
-task-master analyze-complexity --file=custom-tasks.json
+ai-task-generator analyze-complexity --file=custom-tasks.json
 
 # Use Perplexity AI for research-backed complexity analysis
-task-master analyze-complexity --research
+ai-task-generator analyze-complexity --research
 ```
 
 ### View Complexity Report
 
 ```bash
 # Display the task complexity analysis report
-task-master complexity-report
+ai-task-generator complexity-report
 
 # View a report at a custom location
-task-master complexity-report --file=my-report.json
+ai-task-generator complexity-report --file=my-report.json
 ```
 
 ### Managing Task Dependencies
 
 ```bash
 # Add a dependency to a task
-task-master add-dependency --id=<id> --depends-on=<id>
+ai-task-generator add-dependency --id=<id> --depends-on=<id>
 
 # Remove a dependency from a task
-task-master remove-dependency --id=<id> --depends-on=<id>
+ai-task-generator remove-dependency --id=<id> --depends-on=<id>
 
 # Validate dependencies without fixing them
-task-master validate-dependencies
+ai-task-generator validate-dependencies
 
 # Find and fix invalid dependencies automatically
-task-master fix-dependencies
+ai-task-generator fix-dependencies
 ```
 
 ### Add a New Task
 
 ```bash
 # Add a new task using AI
-task-master add-task --prompt="Description of the new task"
+ai-task-generator add-task --prompt="Description of the new task"
 
 # Add a task with dependencies
-task-master add-task --prompt="Description" --dependencies=1,2,3
+ai-task-generator add-task --prompt="Description" --dependencies=1,2,3
 
 # Add a task with priority
-task-master add-task --prompt="Description" --priority=high
+ai-task-generator add-task --prompt="Description" --priority=high
 ```
 
 ## Feature Details
@@ -556,15 +573,15 @@ Example workflow:
 
 ```bash
 # Generate the complexity analysis report with research capabilities
-task-master analyze-complexity --research
+ai-task-generator analyze-complexity --research
 
 # Review the report in a readable format
-task-master complexity-report
+ai-task-generator complexity-report
 
 # Expand tasks using the optimized recommendations
-task-master expand --id=8
+ai-task-generator expand --id=8
 # or expand all tasks
-task-master expand --all
+ai-task-generator expand --all
 ```
 
 ### Finding the Next Task
@@ -618,7 +635,7 @@ The `show` command:
 ### Starting a new project
 
 ```
-I've just initialized a new project with Claude Task Master. I have a PRD at scripts/prd.txt.
+I've just initialized a new project with Claude AI Task Generator. I have a PRD at scripts/prd.txt.
 Can you help me parse it and set up the initial tasks?
 ```
 

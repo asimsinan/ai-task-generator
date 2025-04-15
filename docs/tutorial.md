@@ -1,19 +1,19 @@
-# Task Master Tutorial
+# AI Task Generator Tutorial
 
-This tutorial will guide you through setting up and using Task Master for AI-driven development.
+This tutorial will guide you through setting up and using AI Task Generator for AI-driven development.
 
 ## Initial Setup
 
-There are two ways to set up Task Master: using MCP (recommended) or via npm installation.
+There are two ways to set up AI Task Generator: using MCP (recommended) or via npm installation.
 
 ### Option 1: Using MCP (Recommended)
 
-MCP (Model Control Protocol) provides the easiest way to get started with Task Master directly in your editor.
+MCP (Model Control Protocol) provides the easiest way to get started with AI Task Generator directly in your editor.
 
 1. **Install the package**
 
 ```bash
-npm i -g task-master-ai
+npm i -g ai-task-generator-ai
 ```
 
 2. **Add the MCP config to your editor** (Cursor recommended, but it works with other text editors):
@@ -23,7 +23,7 @@ npm i -g task-master-ai
 	"mcpServers": {
 		"taskmaster-ai": {
 			"command": "npx",
-			"args": ["-y", "task-master-mcp"],
+			"args": ["-y", "ai-task-generator-mcp"],
 			"env": {
 				"ANTHROPIC_API_KEY": "YOUR_ANTHROPIC_API_KEY_HERE",
 				"PERPLEXITY_API_KEY": "YOUR_PERPLEXITY_API_KEY_HERE",
@@ -41,7 +41,7 @@ npm i -g task-master-ai
 
 2. **Enable the MCP** in your editor settings
 
-3. **Prompt the AI** to initialize Task Master:
+3. **Prompt the AI** to initialize AI Task Generator:
 
 ```
 Can you please initialize taskmaster-ai into my project?
@@ -55,7 +55,7 @@ The AI will:
 
 4. Place your PRD document in the `scripts/` directory (e.g., `scripts/prd.txt`)
 
-5. **Use natural language commands** to interact with Task Master:
+5. **Use natural language commands** to interact with AI Task Generator:
 
 ```
 Can you parse my PRD at scripts/prd.txt?
@@ -69,49 +69,49 @@ If you prefer to use the command line interface directly:
 
 ```bash
 # Install globally
-npm install -g task-master-ai
+npm install -g ai-task-generator-ai
 
 # OR install locally within your project
-npm install task-master-ai
+npm install ai-task-generator-ai
 ```
 
 Initialize a new project:
 
 ```bash
 # If installed globally
-task-master init
+ai-task-generator init
 
 # If installed locally
-npx task-master-init
+npx ai-task-generator-init
 ```
 
 This will prompt you for project details and set up a new project with the necessary files and structure.
 
 ## Common Commands
 
-After setting up Task Master, you can use these commands (either via AI prompts or CLI):
+After setting up AI Task Generator, you can use these commands (either via AI prompts or CLI):
 
 ```bash
 # Parse a PRD and generate tasks
-task-master parse-prd your-prd.txt
+ai-task-generator parse-prd your-prd.txt
 
 # List all tasks
-task-master list
+ai-task-generator list
 
 # Show the next task to work on
-task-master next
+ai-task-generator next
 
 # Generate task files
-task-master generate
+ai-task-generator generate
 ```
 
 ## Setting up Cursor AI Integration
 
-Task Master is designed to work seamlessly with [Cursor AI](https://www.cursor.so/), providing a structured workflow for AI-driven development.
+AI Task Generator is designed to work seamlessly with [Cursor AI](https://www.cursor.so/), providing a structured workflow for AI-driven development.
 
 ### Using Cursor with MCP (Recommended)
 
-If you've already set up Task Master with MCP in Cursor, the integration is automatic. You can simply use natural language to interact with Task Master:
+If you've already set up AI Task Generator with MCP in Cursor, the integration is automatic. You can simply use natural language to interact with AI Task Generator:
 
 ```
 What tasks are available to work on next?
@@ -136,25 +136,25 @@ You can also set up the MCP server in Cursor settings:
 2. Navigate to the MCP section
 3. Click on "Add New MCP Server"
 4. Configure with the following details:
-   - Name: "Task Master"
+   - Name: "AI Task Generator"
    - Type: "Command"
-   - Command: "npx -y task-master-mcp"
+   - Command: "npx -y ai-task-generator-mcp"
 5. Save the settings
 
-Once configured, you can interact with Task Master's task management commands directly through Cursor's interface, providing a more integrated experience.
+Once configured, you can interact with AI Task Generator's task management commands directly through Cursor's interface, providing a more integrated experience.
 
 ## Initial Task Generation
 
 In Cursor's AI chat, instruct the agent to generate tasks from your PRD:
 
 ```
-Please use the task-master parse-prd command to generate tasks from my PRD. The PRD is located at scripts/prd.txt.
+Please use the ai-task-generator parse-prd command to generate tasks from my PRD. The PRD is located at scripts/prd.txt.
 ```
 
 The agent will execute:
 
 ```bash
-task-master parse-prd scripts/prd.txt
+ai-task-generator parse-prd scripts/prd.txt
 ```
 
 This will:
@@ -174,7 +174,7 @@ Please generate individual task files from tasks.json
 The agent will execute:
 
 ```bash
-task-master generate
+ai-task-generator generate
 ```
 
 This creates individual task files in the `tasks/` directory (e.g., `task_001.txt`, `task_002.txt`), making it easier to reference specific tasks.
@@ -193,8 +193,8 @@ What tasks are available to work on next?
 
 The agent will:
 
-- Run `task-master list` to see all tasks
-- Run `task-master next` to determine the next task to work on
+- Run `ai-task-generator list` to see all tasks
+- Run `ai-task-generator next` to determine the next task to work on
 - Analyze dependencies to determine which tasks are ready to be worked on
 - Prioritize tasks based on priority level and ID order
 - Suggest the next task(s) to implement
@@ -233,7 +233,7 @@ Task 3 is now complete. Please update its status.
 The agent will execute:
 
 ```bash
-task-master set-status --id=3 --status=done
+ai-task-generator set-status --id=3 --status=done
 ```
 
 ### 5. Handling Implementation Drift
@@ -253,7 +253,7 @@ We've changed our approach. We're now using Express instead of Fastify. Please u
 The agent will execute:
 
 ```bash
-task-master update --from=4 --prompt="Now we are using Express instead of Fastify."
+ai-task-generator update --from=4 --prompt="Now we are using Express instead of Fastify."
 ```
 
 This will rewrite or re-scope subsequent tasks in tasks.json while preserving completed work.
@@ -269,7 +269,7 @@ Task 5 seems complex. Can you break it down into subtasks?
 The agent will execute:
 
 ```bash
-task-master expand --id=5 --num=3
+ai-task-generator expand --id=5 --num=3
 ```
 
 You can provide additional context:
@@ -281,7 +281,7 @@ Please break down task 5 with a focus on security considerations.
 The agent will execute:
 
 ```bash
-task-master expand --id=5 --prompt="Focus on security aspects"
+ai-task-generator expand --id=5 --prompt="Focus on security aspects"
 ```
 
 You can also expand all pending tasks:
@@ -293,7 +293,7 @@ Please break down all pending tasks into subtasks.
 The agent will execute:
 
 ```bash
-task-master expand --all
+ai-task-generator expand --all
 ```
 
 For research-backed subtask generation using Perplexity AI:
@@ -305,7 +305,7 @@ Please break down task 5 using research-backed generation.
 The agent will execute:
 
 ```bash
-task-master expand --id=5 --research
+ai-task-generator expand --id=5 --research
 ```
 
 ## Example Cursor AI Interactions
@@ -313,7 +313,7 @@ task-master expand --id=5 --research
 ### Starting a new project
 
 ```
-I've just initialized a new project with Claude Task Master. I have a PRD at scripts/prd.txt.
+I've just initialized a new project with Claude AI Task Generator. I have a PRD at scripts/prd.txt.
 Can you help me parse it and set up the initial tasks?
 ```
 

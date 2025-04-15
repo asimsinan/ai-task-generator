@@ -1,6 +1,6 @@
 # Task Structure
 
-Tasks in Task Master follow a specific format designed to provide comprehensive information for both humans and AI assistants.
+Tasks in AI Task Generator follow a specific format designed to provide comprehensive information for both humans and AI assistants.
 
 ## Task Fields in tasks.json
 
@@ -81,15 +81,15 @@ Example workflow:
 
 ```bash
 # Generate the complexity analysis report with research capabilities
-task-master analyze-complexity --research
+ai-task-generator analyze-complexity --research
 
 # Review the report in a readable format
-task-master complexity-report
+ai-task-generator complexity-report
 
 # Expand tasks using the optimized recommendations
-task-master expand --id=8
+ai-task-generator expand --id=8
 # or expand all tasks
-task-master expand --all
+ai-task-generator expand --all
 ```
 
 ### Finding the Next Task

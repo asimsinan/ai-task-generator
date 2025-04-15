@@ -1,6 +1,6 @@
 # Configuration
 
-Task Master can be configured through environment variables in a `.env` file at the root of your project.
+AI Task Generator can be configured through environment variables in a `.env` file at the root of your project.
 
 ## Required Configuration
 
@@ -63,28 +63,28 @@ LOG_LEVEL=info
 
 ## Using OpenAI Instead of Claude
 
-Task Master can now use either Claude (default) or OpenAI models for task generation and other AI operations. To use OpenAI:
+AI Task Generator can now use either Claude (default) or OpenAI models for task generation and other AI operations. To use OpenAI:
 
 1. Set `OPENAI_API_KEY` in your `.env` file with your OpenAI API key
 2. Optionally set `PREFER_OPENAI=true` to always prefer OpenAI over Claude
-3. Or use the `--prefer-openai` flag with commands like `task-master parse-prd --prefer-openai`
+3. Or use the `--prefer-openai` flag with commands like `ai-task-generator parse-prd --prefer-openai`
 
 OpenAI models work as a drop-in replacement for Claude in most operations and can also serve as a fallback if Claude is unavailable or overloaded.
 
 ## Troubleshooting
 
-### If `task-master init` doesn't respond:
+### If `ai-task-generator init` doesn't respond:
 
 Try running it with Node directly:
 
 ```bash
-node node_modules/claude-task-master/scripts/init.js
+node node_modules/claude-ai-task-generator/scripts/init.js
 ```
 
 Or clone the repository and run:
 
 ```bash
-git clone https://github.com/eyaltoledano/claude-task-master.git
-cd claude-task-master
+git clone https://github.com/eyaltoledano/claude-ai-task-generator.git
+cd claude-ai-task-generator
 node scripts/init.js
 ```

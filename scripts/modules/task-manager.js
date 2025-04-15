@@ -1,6 +1,6 @@
 /**
  * task-manager.js
- * Task management functions for the Task Master CLI
+ * Task management functions for the AI Task Generator CLI
  */
 
 import fs from 'fs';
@@ -217,8 +217,8 @@ async function parsePRD(
 				boxen(
 					chalk.white.bold('Next Steps:') +
 						'\n\n' +
-						`${chalk.cyan('1.')} Run ${chalk.yellow('task-master list')} to view all tasks\n` +
-						`${chalk.cyan('2.')} Run ${chalk.yellow('task-master expand --id=<id>')} to break down a task into subtasks`,
+						`${chalk.cyan('1.')} Run ${chalk.yellow('ai-task-generator list')} to view all tasks\n` +
+						`${chalk.cyan('2.')} Run ${chalk.yellow('ai-task-generator expand --id=<id>')} to break down a task into subtasks`,
 					{
 						padding: 1,
 						borderColor: 'cyan',
@@ -708,7 +708,7 @@ Return only the updated task as a valid JSON object.`
 					'  1. Set your Perplexity API key: export PERPLEXITY_API_KEY=your_api_key_here'
 				);
 				console.log(
-					'  2. Or run without the research flag: task-master update --from=<id> --prompt="..."'
+					'  2. Or run without the research flag: ai-task-generator update --from=<id> --prompt="..."'
 				);
 			} else if (error.message?.includes('overloaded')) {
 				console.log(
@@ -1375,14 +1375,14 @@ Return only the updated task as a valid JSON object.`
 					'  1. Set your Perplexity API key: export PERPLEXITY_API_KEY=your_api_key_here'
 				);
 				console.log(
-					'  2. Or run without the research flag: task-master update-task --id=<id> --prompt="..."'
+					'  2. Or run without the research flag: ai-task-generator update-task --id=<id> --prompt="..."'
 				);
 			} else if (
 				error.message.includes('Task with ID') &&
 				error.message.includes('not found')
 			) {
 				console.log(chalk.yellow('\nTo fix this issue:'));
-				console.log('  1. Run task-master list to see all available task IDs');
+				console.log('  1. Run ai-task-generator list to see all available task IDs');
 				console.log('  2. Use a valid task ID with the --id parameter');
 			}
 
@@ -1717,7 +1717,7 @@ async function updateSingleTaskStatus(
 					);
 					console.log(
 						chalk.yellow(
-							`Consider updating the parent task status with: task-master set-status --id=${parentId} --status=done`
+							`Consider updating the parent task status with: ai-task-generator set-status --id=${parentId} --status=done`
 						)
 					);
 				}
@@ -2380,8 +2380,8 @@ function listTasks(
 						`${chalk.white('Description:')} ${nextTask.description}` +
 						subtasksSection +
 						'\n\n' +
-						`${chalk.cyan('Start working:')} ${chalk.yellow(`task-master set-status --id=${nextTask.id} --status=in-progress`)}\n` +
-						`${chalk.cyan('View details:')} ${chalk.yellow(`task-master show ${nextTask.id}`)}`,
+						`${chalk.cyan('Start working:')} ${chalk.yellow(`ai-task-generator set-status --id=${nextTask.id} --status=in-progress`)}\n` +
+						`${chalk.cyan('View details:')} ${chalk.yellow(`ai-task-generator show ${nextTask.id}`)}`,
 					{
 						padding: { left: 2, right: 2, top: 1, bottom: 1 },
 						borderColor: '#FF8800',
@@ -2418,9 +2418,9 @@ function listTasks(
 			boxen(
 				chalk.white.bold('Suggested Next Steps:') +
 					'\n\n' +
-					`${chalk.cyan('1.')} Run ${chalk.yellow('task-master next')} to see what to work on next\n` +
-					`${chalk.cyan('2.')} Run ${chalk.yellow('task-master expand --id=<id>')} to break down a task into subtasks\n` +
-					`${chalk.cyan('3.')} Run ${chalk.yellow('task-master set-status --id=<id> --status=done')} to mark a task as complete`,
+					`${chalk.cyan('1.')} Run ${chalk.yellow('ai-task-generator next')} to see what to work on next\n` +
+					`${chalk.cyan('2.')} Run ${chalk.yellow('ai-task-generator expand --id=<id>')} to break down a task into subtasks\n` +
+					`${chalk.cyan('3.')} Run ${chalk.yellow('ai-task-generator set-status --id=<id> --status=done')} to mark a task as complete`,
 				{
 					padding: 1,
 					borderColor: 'gray',
@@ -2928,7 +2928,7 @@ async function expandAllTasks(
 				} else {
 					report(`Failed to generate subtasks for task ${task.id}`, 'error');
 					report(
-						`Suggestion: Run 'task-master update-task --id=${task.id} --prompt="Generate subtasks for this task"' to manually create subtasks.`,
+						`Suggestion: Run 'ai-task-generator update-task --id=${task.id} --prompt="Generate subtasks for this task"' to manually create subtasks.`,
 						'info'
 					);
 					expansionErrors++;
@@ -3006,17 +3006,17 @@ async function expandAllTasks(
 				console.log(chalk.bold('\nNext Steps:'));
 				console.log(
 					chalk.cyan(
-						`1. Run ${chalk.yellow('task-master list --with-subtasks')} to see all tasks with their subtasks`
+						`1. Run ${chalk.yellow('ai-task-generator list --with-subtasks')} to see all tasks with their subtasks`
 					)
 				);
 				console.log(
 					chalk.cyan(
-						`2. Run ${chalk.yellow('task-master next')} to find the next task to work on`
+						`2. Run ${chalk.yellow('ai-task-generator next')} to find the next task to work on`
 					)
 				);
 				console.log(
 					chalk.cyan(
-						`3. Run ${chalk.yellow('task-master set-status --id=<taskId> --status=in-progress')} to start working on a task`
+						`3. Run ${chalk.yellow('ai-task-generator set-status --id=<taskId> --status=in-progress')} to start working on a task`
 					)
 				);
 			}
@@ -3136,8 +3136,8 @@ function clearSubtasks(tasksPath, taskIds) {
 			boxen(
 				chalk.white.bold('Next Steps:') +
 					'\n\n' +
-					`${chalk.cyan('1.')} Run ${chalk.yellow('task-master expand --id=<id>')} to generate new subtasks\n` +
-					`${chalk.cyan('2.')} Run ${chalk.yellow('task-master list --with-subtasks')} to verify changes`,
+					`${chalk.cyan('1.')} Run ${chalk.yellow('ai-task-generator expand --id=<id>')} to generate new subtasks\n` +
+					`${chalk.cyan('2.')} Run ${chalk.yellow('ai-task-generator list --with-subtasks')} to verify changes`,
 				{
 					padding: 1,
 					borderColor: 'cyan',
@@ -3558,15 +3558,15 @@ async function addTask(
 						chalk.white.bold('Next Steps:') +
 						'\n' +
 						chalk.cyan(
-							`1. Run ${chalk.yellow(`task-master show ${newTaskId}`)} to see complete task details`
+							`1. Run ${chalk.yellow(`ai-task-generator show ${newTaskId}`)} to see complete task details`
 						) +
 						'\n' +
 						chalk.cyan(
-							`2. Run ${chalk.yellow(`task-master set-status --id=${newTaskId} --status=in-progress`)} to start working on it`
+							`2. Run ${chalk.yellow(`ai-task-generator set-status --id=${newTaskId} --status=in-progress`)} to start working on it`
 						) +
 						'\n' +
 						chalk.cyan(
-							`3. Run ${chalk.yellow(`task-master expand --id=${newTaskId}`)} to break it down into subtasks`
+							`3. Run ${chalk.yellow(`ai-task-generator expand --id=${newTaskId}`)} to break it down into subtasks`
 						),
 					{ padding: 1, borderColor: 'green', borderStyle: 'round' }
 				)
@@ -4429,9 +4429,9 @@ DO NOT include any text before or after the JSON array. No explanations, no mark
 						boxen(
 							chalk.white.bold('Suggested Next Steps:') +
 								'\n\n' +
-								`${chalk.cyan('1.')} Run ${chalk.yellow('task-master complexity-report')} to review detailed findings\n` +
-								`${chalk.cyan('2.')} Run ${chalk.yellow('task-master expand --id=<id>')} to break down complex tasks\n` +
-								`${chalk.cyan('3.')} Run ${chalk.yellow('task-master expand --all')} to expand all pending tasks based on complexity`,
+								`${chalk.cyan('1.')} Run ${chalk.yellow('ai-task-generator complexity-report')} to review detailed findings\n` +
+								`${chalk.cyan('2.')} Run ${chalk.yellow('ai-task-generator expand --id=<id>')} to break down complex tasks\n` +
+								`${chalk.cyan('3.')} Run ${chalk.yellow('ai-task-generator expand --all')} to expand all pending tasks based on complexity`,
 							{
 								padding: 1,
 								borderColor: 'cyan',
@@ -4501,7 +4501,7 @@ DO NOT include any text before or after the JSON array. No explanations, no mark
 					'  1. Set your Perplexity API key: export PERPLEXITY_API_KEY=your_api_key_here'
 				);
 				console.log(
-					'  2. Or run without the research flag: task-master analyze-complexity'
+					'  2. Or run without the research flag: ai-task-generator analyze-complexity'
 				);
 			}
 
@@ -5399,7 +5399,7 @@ Provide concrete examples, code snippets, or implementation details when relevan
 					'  1. Set your Perplexity API key: export PERPLEXITY_API_KEY=your_api_key_here'
 				);
 				console.log(
-					'  2. Or run without the research flag: task-master update-subtask --id=<id> --prompt=\"...\"'
+					'  2. Or run without the research flag: ai-task-generator update-subtask --id=<id> --prompt=\"...\"'
 				);
 			} else if (error.message?.includes('overloaded')) {
 				// Catch final overload error
@@ -5414,7 +5414,7 @@ Provide concrete examples, code snippets, or implementation details when relevan
 			} else if (error.message?.includes('not found')) {
 				console.log(chalk.yellow('\nTo fix this issue:'));
 				console.log(
-					'  1. Run task-master list --with-subtasks to see all available subtask IDs'
+					'  1. Run ai-task-generator list --with-subtasks to see all available subtask IDs'
 				);
 				console.log(
 					'  2. Use a valid subtask ID with the --id parameter in format \"parentId.subtaskId\"'
@@ -5776,7 +5776,7 @@ async function getSubtasksFromAI(
 				error: parseError.message,
 				taskId: null, // This will be filled in by the calling function
 				suggestion:
-					'Use \'task-master update-task --id=<id> --prompt="Generate subtasks for this task"\' to manually create subtasks.'
+					'Use \'ai-task-generator update-task --id=<id> --prompt="Generate subtasks for this task"\' to manually create subtasks.'
 			};
 		}
 	} catch (error) {
@@ -5790,7 +5790,7 @@ async function getSubtasksFromAI(
 			error: error.message,
 			taskId: null, // This will be filled in by the calling function
 			suggestion:
-				'Use \'task-master update-task --id=<id> --prompt="Generate subtasks for this task"\' to manually create subtasks.'
+				'Use \'ai-task-generator update-task --id=<id> --prompt="Generate subtasks for this task"\' to manually create subtasks.'
 		};
 	}
 }
