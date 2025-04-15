@@ -20,15 +20,21 @@ In an AI-driven development process—particularly with tools like [Cursor](http
 
 The script can be configured through environment variables in a `.env` file at the root of the project:
 
-### Required Configuration
+### Required Configuration (at least one of these is required)
 
 - `ANTHROPIC_API_KEY`: Your Anthropic API key for Claude
+- `OPENAI_API_KEY`: Your OpenAI API key (default model)
 
 ### Optional Configuration
 
 - `MODEL`: Specify which Claude model to use (default: "claude-3-7-sonnet-20250219")
-- `MAX_TOKENS`: Maximum tokens for model responses (default: 4000)
-- `TEMPERATURE`: Temperature for model responses (default: 0.7)
+- `OPENAI_MODEL`: Specify which OpenAI model to use (default: "gpt-4o")
+- `MAX_TOKENS`: Maximum tokens for Claude responses (default: 4000)
+- `OPENAI_MAX_TOKENS`: Maximum tokens for OpenAI responses (default: 4096)
+- `TEMPERATURE`: Temperature for Claude responses (default: 0.7)
+- `OPENAI_TEMPERATURE`: Temperature for OpenAI responses (default: 0.2)
+- `PREFER_OPENAI`: Prefer OpenAI over Claude (default: true)
+- `PREFER_CLAUDE`: Prefer Claude over OpenAI (default: false)
 - `PERPLEXITY_API_KEY`: Your Perplexity API key for research-backed subtask generation
 - `PERPLEXITY_MODEL`: Specify which Perplexity model to use (default: "sonar-medium-online")
 - `DEBUG`: Enable debug logging (default: false)
@@ -52,7 +58,7 @@ The script can be configured through environment variables in a `.env` file at t
 
    ```bash
    # If installed globally
-   task-master [command] [options]
+   ai-task-generator [command] [options]
 
    # If using locally within the project
    node scripts/dev.js [command] [options]
@@ -78,7 +84,7 @@ The script can be configured through environment variables in a `.env` file at t
    - `fix-dependencies`: Fix invalid dependencies automatically
    - `add-task`: Add a new task using AI
 
-   Run `task-master --help` or `node scripts/dev.js --help` to see detailed usage information.
+   Run `ai-task-generator --help` or `node scripts/dev.js --help` to see detailed usage information.
 
 ## Listing Tasks
 
@@ -86,16 +92,16 @@ The `list` command allows you to view all tasks and their status:
 
 ```bash
 # List all tasks
-task-master list
+ai-task-generator list
 
 # List tasks with a specific status
-task-master list --status=pending
+ai-task-generator list --status=pending
 
 # List tasks and include their subtasks
-task-master list --with-subtasks
+ai-task-generator list --with-subtasks
 
 # List tasks with a specific status and include their subtasks
-task-master list --status=pending --with-subtasks
+ai-task-generator list --status=pending --with-subtasks
 ```
 
 ## Updating Tasks
@@ -104,13 +110,13 @@ The `update` command allows you to update tasks based on new information or impl
 
 ```bash
 # Update tasks starting from ID 4 with a new prompt
-task-master update --from=4 --prompt="Refactor tasks from ID 4 onward to use Express instead of Fastify"
+ai-task-generator update --from=4 --prompt="Refactor tasks from ID 4 onward to use Express instead of Fastify"
 
 # Update all tasks (default from=1)
-task-master update --prompt="Add authentication to all relevant tasks"
+ai-task-generator update --prompt="Add authentication to all relevant tasks"
 
 # Specify a different tasks file
-task-master update --file=custom-tasks.json --from=5 --prompt="Change database from MongoDB to PostgreSQL"
+ai-task-generator update --file=custom-tasks.json --from=5 --prompt="Change database from MongoDB to PostgreSQL"
 ```
 
 Notes:
@@ -125,16 +131,16 @@ The `set-status` command allows you to change a task's status:
 
 ```bash
 # Mark a task as done
-task-master set-status --id=3 --status=done
+ai-task-generator set-status --id=3 --status=done
 
 # Mark a task as pending
-task-master set-status --id=4 --status=pending
+ai-task-generator set-status --id=4 --status=pending
 
 # Mark a specific subtask as done
-task-master set-status --id=3.1 --status=done
+ai-task-generator set-status --id=3.1 --status=done
 
 # Mark multiple tasks at once
-task-master set-status --id=1,2,3 --status=done
+ai-task-generator set-status --id=1,2,3 --status=done
 ```
 
 Notes:
@@ -151,25 +157,25 @@ The `expand` command allows you to break down tasks into subtasks for more detai
 
 ```bash
 # Expand a specific task with 3 subtasks (default)
-task-master expand --id=3
+ai-task-generator expand --id=3
 
 # Expand a specific task with 5 subtasks
-task-master expand --id=3 --num=5
+ai-task-generator expand --id=3 --num=5
 
 # Expand a task with additional context
-task-master expand --id=3 --prompt="Focus on security aspects"
+ai-task-generator expand --id=3 --prompt="Focus on security aspects"
 
 # Expand all pending tasks that don't have subtasks
-task-master expand --all
+ai-task-generator expand --all
 
 # Force regeneration of subtasks for all pending tasks
-task-master expand --all --force
+ai-task-generator expand --all --force
 
 # Use Perplexity AI for research-backed subtask generation
-task-master expand --id=3 --research
+ai-task-generator expand --id=3 --research
 
 # Use Perplexity AI for research-backed generation on all pending tasks
-task-master expand --all --research
+ai-task-generator expand --all --research
 ```
 
 ## Clearing Subtasks
@@ -178,13 +184,13 @@ The `clear-subtasks` command allows you to remove subtasks from specified tasks:
 
 ```bash
 # Clear subtasks from a specific task
-task-master clear-subtasks --id=3
+ai-task-generator clear-subtasks --id=3
 
 # Clear subtasks from multiple tasks
-task-master clear-subtasks --id=1,2,3
+ai-task-generator clear-subtasks --id=1,2,3
 
 # Clear subtasks from all tasks
-task-master clear-subtasks --all
+ai-task-generator clear-subtasks --all
 ```
 
 Notes:
@@ -227,10 +233,10 @@ The `add-dependency` and `remove-dependency` commands allow you to manage task d
 
 ```bash
 # Add a dependency to a task
-task-master add-dependency --id=<id> --depends-on=<id>
+ai-task-generator add-dependency --id=<id> --depends-on=<id>
 
 # Remove a dependency from a task
-task-master remove-dependency --id=<id> --depends-on=<id>
+ai-task-generator remove-dependency --id=<id> --depends-on=<id>
 ```
 
 These commands:
@@ -267,10 +273,10 @@ The `validate-dependencies` command allows you to check for invalid dependencies
 
 ```bash
 # Check for invalid dependencies in tasks.json
-task-master validate-dependencies
+ai-task-generator validate-dependencies
 
 # Specify a different tasks file
-task-master validate-dependencies --file=custom-tasks.json
+ai-task-generator validate-dependencies --file=custom-tasks.json
 ```
 
 This command:
@@ -289,10 +295,10 @@ The `fix-dependencies` command proactively finds and fixes all invalid dependenc
 
 ```bash
 # Find and fix all invalid dependencies
-task-master fix-dependencies
+ai-task-generator fix-dependencies
 
 # Specify a different tasks file
-task-master fix-dependencies --file=custom-tasks.json
+ai-task-generator fix-dependencies --file=custom-tasks.json
 ```
 
 This command:
@@ -318,19 +324,19 @@ The `analyze-complexity` command allows you to automatically assess task complex
 
 ```bash
 # Analyze all tasks and generate expansion recommendations
-task-master analyze-complexity
+ai-task-generator analyze-complexity
 
 # Specify a custom output file
-task-master analyze-complexity --output=custom-report.json
+ai-task-generator analyze-complexity --output=custom-report.json
 
 # Override the model used for analysis
-task-master analyze-complexity --model=claude-3-opus-20240229
+ai-task-generator analyze-complexity --model=claude-3-opus-20240229
 
 # Set a custom complexity threshold (1-10)
-task-master analyze-complexity --threshold=6
+ai-task-generator analyze-complexity --threshold=6
 
 # Use Perplexity AI for research-backed complexity analysis
-task-master analyze-complexity --research
+ai-task-generator analyze-complexity --research
 ```
 
 Notes:
@@ -349,13 +355,13 @@ The `expand` command automatically checks for and uses complexity analysis if av
 
 ```bash
 # Expand a task, using complexity report recommendations if available
-task-master expand --id=8
+ai-task-generator expand --id=8
 
 # Expand all tasks, prioritizing by complexity score if a report exists
-task-master expand --all
+ai-task-generator expand --all
 
 # Override recommendations with explicit values
-task-master expand --id=8 --num=5 --prompt="Custom prompt"
+ai-task-generator expand --id=8 --num=5 --prompt="Custom prompt"
 ```
 
 When a complexity report exists:
@@ -384,7 +390,7 @@ The output report structure is:
 			"recommendedSubtasks": 6,
 			"expansionPrompt": "Create subtasks that handle detecting...",
 			"reasoning": "This task requires sophisticated logic...",
-			"expansionCommand": "task-master expand --id=8 --num=6 --prompt=\"Create subtasks...\" --research"
+			"expansionCommand": "ai-task-generator expand --id=8 --num=6 --prompt=\"Create subtasks...\" --research"
 		}
 		// More tasks sorted by complexity score (highest first)
 	]
@@ -397,10 +403,10 @@ The `next` command helps you determine which task to work on next based on depen
 
 ```bash
 # Show the next task to work on
-task-master next
+ai-task-generator next
 
 # Specify a different tasks file
-task-master next --file=custom-tasks.json
+ai-task-generator next --file=custom-tasks.json
 ```
 
 This command:
@@ -427,16 +433,16 @@ The `show` command allows you to view detailed information about a specific task
 
 ```bash
 # Show details for a specific task
-task-master show 1
+ai-task-generator show 1
 
 # Alternative syntax with --id option
-task-master show --id=1
+ai-task-generator show --id=1
 
 # Show details for a subtask
-task-master show --id=1.2
+ai-task-generator show --id=1.2
 
 # Specify a different tasks file
-task-master show 3 --file=custom-tasks.json
+ai-task-generator show 3 --file=custom-tasks.json
 ```
 
 This command:

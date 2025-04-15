@@ -30,7 +30,7 @@ const warmGradient = gradient(['#fb8b24', '#e36414', '#9a031e']);
  */
 function displayBanner() {
 	console.clear();
-	const bannerText = figlet.textSync('Task Master', {
+	const bannerText = figlet.textSync('AI Task Generator', {
 		font: 'Standard',
 		horizontalLayout: 'default',
 		verticalLayout: 'default'
@@ -377,7 +377,7 @@ function displayHelp() {
 	displayBanner();
 
 	console.log(
-		boxen(chalk.white.bold('Task Master CLI'), {
+		boxen(chalk.white.bold('AI Task Generator CLI'), {
 			padding: 1,
 			borderColor: 'blue',
 			borderStyle: 'round',

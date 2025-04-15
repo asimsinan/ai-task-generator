@@ -1,7 +1,7 @@
 #!/usr/bin/env node --trace-deprecation
 
 /**
- * Task Master
+ * AI Task Generator
  * Copyright (c) 2025 Eyal Toledano, Ralph Khreish
  *
  * This software is licensed under the MIT License with Commons Clause.
@@ -16,7 +16,7 @@
  */
 
 /**
- * Claude Task Master CLI
+ * AI Task Generator CLI
  * Main entry point for globally installed package
  */
 
@@ -29,6 +29,7 @@ import { displayHelp, displayBanner } from '../scripts/modules/ui.js';
 import { registerCommands } from '../scripts/modules/commands.js';
 import { detectCamelCaseFlags } from '../scripts/modules/utils.js';
 import chalk from 'chalk';
+import { initializeProject } from '../scripts/init.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -97,7 +98,7 @@ function createDevScriptAction(commandName) {
 				console.error(`  Use:        --${flag.kebabCase}`);
 			});
 			console.error(
-				'\nExample: task-master parse-prd --num-tasks=5 instead of --numTasks=5\n'
+				'\nExample: ai-task-generator parse-prd --num-tasks=5 instead of --numTasks=5\n'
 			);
 			process.exit(1);
 		}
@@ -225,54 +226,12 @@ function createDevScriptAction(commandName) {
 	};
 }
 
-// // Special case for the 'init' command which uses a different script
-// function registerInitCommand(program) {
-// 	program
-// 		.command('init')
-// 		.description('Initialize a new project')
-// 		.option('-y, --yes', 'Skip prompts and use default values')
-// 		.option('-n, --name <name>', 'Project name')
-// 		.option('-d, --description <description>', 'Project description')
-// 		.option('-v, --version <version>', 'Project version')
-// 		.option('-a, --author <author>', 'Author name')
-// 		.option('--skip-install', 'Skip installing dependencies')
-// 		.option('--dry-run', 'Show what would be done without making changes')
-// 		.action((options) => {
-// 			// Pass through any options to the init script
-// 			const args = [
-// 				'--yes',
-// 				'name',
-// 				'description',
-// 				'version',
-// 				'author',
-// 				'skip-install',
-// 				'dry-run'
-// 			]
-// 				.filter((opt) => options[opt])
-// 				.map((opt) => {
-// 					if (opt === 'yes' || opt === 'skip-install' || opt === 'dry-run') {
-// 						return `--${opt}`;
-// 					}
-// 					return `--${opt}=${options[opt]}`;
-// 				});
-
-// 			const child = spawn('node', [initScriptPath, ...args], {
-// 				stdio: 'inherit',
-// 				cwd: process.cwd()
-// 			});
-
-// 			child.on('close', (code) => {
-// 				process.exit(code);
-// 			});
-// 		});
-// }
-
 // Set up the command-line interface
 const program = new Command();
 
 program
-	.name('task-master')
-	.description('Claude Task Master CLI')
+	.name('ai-task-generator')
+	.description('AI Task Generator CLI')
 	.version(version)
 	.addHelpText('afterAll', () => {
 		// Use the same help display function as dev.js for consistency
@@ -286,8 +245,36 @@ program.on('--help', () => {
 	displayHelp();
 });
 
-// // Add special case commands
-// registerInitCommand(program);
+// Special handling for the init command
+program
+	.command('init')
+	.description('Initialize a new project')
+	.option('-y, --yes', 'Skip prompts and use default values')
+	.option('-n, --name <name>', 'Project name')
+	.option('-d, --description <description>', 'Project description')
+	.option('-v, --version <version>', 'Project version', '0.1.0')
+	.option('-a, --author <author>', 'Author name')
+	.option('--skip-install', 'Skip installing dependencies')
+	.option('--dry-run', 'Show what would be done without making changes')
+	.option('--aliases', 'Add shell aliases (atg, ai-task-generator)')
+	.option('--sudo', 'Use sudo for npm install (for permission issues)')
+	.action(async (options) => {
+		console.log('===== DEBUG: INITIALIZE PROJECT OPTIONS RECEIVED =====');
+		console.log('Full options object:', JSON.stringify(options));
+		console.log('options.yes:', options.yes);
+		console.log('options.name:', options.name);
+		console.log('options.version:', options.version);
+		console.log('options.description:', options.description);
+		console.log('options.author:', options.author);
+		console.log('options.sudo:', options.sudo);
+		
+		try {
+			await initializeProject(options);
+		} catch (error) {
+			console.error(chalk.red(`Error during initialization: ${error.message}`));
+			process.exit(1);
+		}
+	});
 
 program
 	.command('dev')
@@ -331,7 +318,7 @@ process.on('uncaughtException', (err) => {
 		const commandArg = process.argv.find(
 			(arg) =>
 				!arg.startsWith('-') &&
-				arg !== 'task-master' &&
+				arg !== 'ai-task-generator' &&
 				!arg.includes('/') &&
 				arg !== 'node'
 		);
@@ -340,7 +327,7 @@ process.on('uncaughtException', (err) => {
 		console.error(chalk.red(`Error: Unknown option '${option}'`));
 		console.error(
 			chalk.yellow(
-				`Run 'task-master ${command} --help' to see available options for this command`
+				`Run 'ai-task-generator ${command} --help' to see available options for this command`
 			)
 		);
 		process.exit(1);
@@ -352,7 +339,7 @@ process.on('uncaughtException', (err) => {
 
 		console.error(chalk.red(`Error: Unknown command '${command}'`));
 		console.error(
-			chalk.yellow(`Run 'task-master --help' to see available commands`)
+			chalk.yellow(`Run 'ai-task-generator --help' to see available commands`)
 		);
 		process.exit(1);
 	}
@@ -365,7 +352,7 @@ process.on('uncaughtException', (err) => {
 	process.exit(1);
 });
 
-// Show help if no command was provided (just 'task-master' with no args)
+// Show help if no command was provided (just 'ai-task-generator' with no args)
 if (process.argv.length <= 2) {
 	displayBanner();
 	displayHelp();
@@ -377,4 +364,4 @@ if (typeof module !== 'undefined') {
 	module.exports = {
 		detectCamelCaseFlags
 	};
-}
+} 

@@ -1,5 +1,5 @@
 /**
- * Task Master
+ * AI Task Generator
  * Copyright (c) 2025 Eyal Toledano, Ralph Khreish
  *
  * This software is licensed under the MIT License with Commons Clause.
@@ -54,7 +54,7 @@ function displayBanner() {
 	if (isSilentMode()) return;
 
 	console.clear();
-	const bannerText = figlet.textSync('Task Master AI', {
+	const bannerText = figlet.textSync('AI Task Generator', {
 		font: 'Standard',
 		horizontalLayout: 'default',
 		verticalLayout: 'default'
@@ -148,20 +148,20 @@ function addShellAliases() {
 
 		// Check if aliases already exist
 		const configContent = fs.readFileSync(shellConfigFile, 'utf8');
-		if (configContent.includes("alias tm='task-master'")) {
-			log('info', 'Task Master aliases already exist in shell config.');
+		if (configContent.includes("alias atg='ai-task-generator'")) {
+			log('info', 'AI Task Generator aliases already exist in shell config.');
 			return true;
 		}
 
 		// Add aliases to the shell config file
 		const aliasBlock = `
-# Task Master aliases added on ${new Date().toLocaleDateString()}
-alias tm='task-master'
-alias taskmaster='task-master'
+# AI Task Generator aliases added on ${new Date().toLocaleDateString()}
+alias atg='ai-task-generator'
+alias aitaskgen='ai-task-generator'
 `;
 
 		fs.appendFileSync(shellConfigFile, aliasBlock);
-		log('success', `Added Task Master aliases to ${shellConfigFile}`);
+		log('success', `Added AI Task Generator aliases to ${shellConfigFile}`);
 		log(
 			'info',
 			'To use the aliases in your current terminal, run: source ' +
@@ -224,8 +224,8 @@ function copyTemplateFile(templateName, targetPath, replacements = {}) {
 				'self_improve.mdc'
 			);
 			break;
-		case 'README-task-master.md':
-			sourcePath = path.join(__dirname, '..', 'README-task-master.md');
+		case 'README.md':
+			sourcePath = path.join(__dirname, '..', 'README.md');
 			break;
 		case 'windsurfrules':
 			sourcePath = path.join(__dirname, '..', 'assets', '.windsurfrules');
@@ -359,7 +359,7 @@ function copyTemplateFile(templateName, targetPath, replacements = {}) {
 			// Create a separate README file specifically for this project
 			const taskMasterReadmePath = path.join(
 				path.dirname(targetPath),
-				'README-task-master.md'
+				'README.md'
 			);
 			fs.writeFileSync(taskMasterReadmePath, content);
 			log(
@@ -416,9 +416,9 @@ async function initializeProject(options = {}) {
 		}
 
 		// Use provided options or defaults
-		const projectName = options.name || 'task-master-project';
+		const projectName = options.name || 'ai-task-generator-project';
 		const projectDescription =
-			options.description || 'A project managed with Task Master AI';
+			options.description || 'A project managed with AI Task Generator';
 		const projectVersion = options.version || '0.1.0'; // Default from commands.js or here
 		const authorName = options.author || 'Vibe coder'; // Default if not provided
 		const dryRun = options.dryRun || false;
@@ -436,7 +436,7 @@ async function initializeProject(options = {}) {
 			log('info', `Author: ${authorName || 'Not specified'}`);
 			log('info', 'Would create/update necessary project files');
 			if (addAliases) {
-				log('info', 'Would add shell aliases for task-master');
+				log('info', 'Would add shell aliases for ai-task-generator');
 			}
 			if (!skipInstall) {
 				log('info', 'Would install dependencies');
@@ -488,7 +488,7 @@ async function initializeProject(options = {}) {
 			);
 			const addAliasesInput = await promptQuestion(
 				rl,
-				chalk.cyan('Add shell aliases for task-master? (Y/n): ')
+				chalk.cyan('Add shell aliases for ai-task-generator? (Y/n): ')
 			);
 			const useSudoInput = await promptQuestion(
 				rl,
@@ -511,7 +511,7 @@ async function initializeProject(options = {}) {
 			);
 			console.log(
 				chalk.blue(
-					'Add shell aliases (so you can use "tm" instead of "task-master"):'
+					'Add shell aliases (so you can use "atg" instead of "ai-task-generator"):'
 				),
 				chalk.white(addAliasesPrompted ? 'Yes' : 'No')
 			);
@@ -549,7 +549,7 @@ async function initializeProject(options = {}) {
 				log('info', `Author: ${authorName || 'Not specified'}`);
 				log('info', 'Would create/update necessary project files');
 				if (addAliasesPrompted) {
-					log('info', 'Would add shell aliases for task-master');
+					log('info', 'Would add shell aliases for ai-task-generator');
 				}
 				if (!skipInstall) {
 					log('info', 'Would install dependencies');
@@ -771,7 +771,7 @@ function createProjectStructure(
 
 	// Create main README.md
 	copyTemplateFile(
-		'README-task-master.md',
+		'README.md',
 		path.join(targetDir, 'README.md'),
 		replacements
 	);
@@ -893,7 +893,7 @@ function createProjectStructure(
 					'\n' +
 					chalk.white('   └─ ') +
 					chalk.dim('You can also run ') +
-					chalk.cyan('task-master parse-prd <your-prd-file.txt>') +
+					chalk.cyan('ai-task-generator parse-prd <your-prd-file.txt>') +
 					'\n' +
 					chalk.white('4. ') +
 					chalk.yellow('Ask Cursor to analyze the complexity of your tasks') +
@@ -949,9 +949,9 @@ function setupMCPConfiguration(targetDir, projectName) {
 
 	// New MCP config to be added - references the installed package
 	const newMCPServer = {
-		'task-master-ai': {
+		'ai-task-generator': {
 			command: 'npx',
-			args: ['-y', 'task-master-mcp'],
+			args: ['-y', 'ai-task-generator-mcp'],
 			env: {
 				ANTHROPIC_API_KEY: 'YOUR_ANTHROPIC_API_KEY',
 				OPENAI_API_KEY: 'YOUR_OPENAI_API_KEY',
@@ -977,7 +977,7 @@ function setupMCPConfiguration(targetDir, projectName) {
 	if (fs.existsSync(mcpJsonPath)) {
 		log(
 			'info',
-			'MCP configuration file already exists, checking for existing task-master-mcp...'
+			'MCP configuration file already exists, checking for existing ai-task-generator-mcp...'
 		);
 		try {
 			// Read existing config
@@ -988,32 +988,32 @@ function setupMCPConfiguration(targetDir, projectName) {
 				mcpConfig.mcpServers = {};
 			}
 
-			// Check if any existing server configuration already has task-master-mcp in its args
+			// Check if any existing server configuration already has ai-task-generator-mcp in its args
 			const hasMCPString = Object.values(mcpConfig.mcpServers).some(
 				(server) =>
 					server.args &&
 					server.args.some(
-						(arg) => typeof arg === 'string' && arg.includes('task-master-mcp')
+						(arg) => typeof arg === 'string' && arg.includes('ai-task-generator-mcp')
 					)
 			);
 
 			if (hasMCPString) {
 				log(
 					'info',
-					'Found existing task-master-mcp configuration in mcp.json, leaving untouched'
+					'Found existing ai-task-generator-mcp configuration in mcp.json, leaving untouched'
 				);
 				return; // Exit early, don't modify the existing configuration
 			}
 
-			// Add the task-master-ai server if it doesn't exist
-			if (!mcpConfig.mcpServers['task-master-ai']) {
-				mcpConfig.mcpServers['task-master-ai'] = newMCPServer['task-master-ai'];
+			// Add the ai-task-generator server if it doesn't exist
+			if (!mcpConfig.mcpServers['ai-task-generator']) {
+				mcpConfig.mcpServers['ai-task-generator'] = newMCPServer['ai-task-generator'];
 				log(
 					'info',
-					'Added task-master-ai server to existing MCP configuration'
+					'Added ai-task-generator server to existing MCP configuration'
 				);
 			} else {
-				log('info', 'task-master-ai server already configured in mcp.json');
+				log('info', 'ai-task-generator server already configured in mcp.json');
 			}
 
 			// Write the updated configuration
@@ -1050,7 +1050,7 @@ function setupMCPConfiguration(targetDir, projectName) {
 	}
 
 	// Add note to console about MCP integration
-	log('info', 'MCP server will use the installed task-master-ai package');
+	log('info', 'MCP server will use the installed ai-task-generator package');
 }
 
 // Ensure necessary functions are exported

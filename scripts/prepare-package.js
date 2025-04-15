@@ -131,7 +131,7 @@ function preparePackage() {
 	// Check for required files
 	const requiredFiles = [
 		'package.json',
-		'README-task-master.md',
+		'README.md',
 		'index.js',
 		'scripts/init.js',
 		'scripts/dev.js',

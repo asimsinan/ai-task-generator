@@ -1,15 +1,51 @@
 # Development files
+node_modules
 .git
 .github
 .vscode
 .idea
 .DS_Store
 
+# Testing
+tests/
+coverage/
+jest.config.js
+*.test.js
+
+# Documentation that's not needed in the package
+docs/
+assets/
+*.md
+!README.md
+
+# Development scripts
+scripts/dev-*.js
+scripts/test-*.js
+debug.log
+dev-debug.log
+
+# Environment and configuration
+.env
+.env.*
+.editorconfig
+.eslintrc*
+.prettierrc*
+.babelrc*
+
+# Build artifacts
+*.log
+dist/
+build/
+
+# Other
+.cursor/
+temp/
+tmp/
+
 # Logs
 logs
 *.log
 npm-debug.log*
-dev-debug.log
 init-debug.log
 
 # Source files not needed in the package
@@ -38,9 +74,6 @@ scripts/prd.txt
 .temp
 *.swp
 *.swo
-
-# Node modules
-node_modules/
 
 # Debug files
 *.debug 

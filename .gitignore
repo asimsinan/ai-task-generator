@@ -60,7 +60,6 @@ dist
 init-debug.log
 dev-debug.log
 
-# Added by Claude Task Master
 # Editor directories and files
 .idea
 .vscode

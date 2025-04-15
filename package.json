@@ -1,12 +1,12 @@
 {
-  "name": "asy-task-manager",
-  "version": "1.0.0",
+  "name": "ai-task-generator",
+  "version": "1.0.2",
   "description": "A task management system for ambitious AI-driven development that doesn't overwhelm and confuse Cursor.",
   "main": "index.js",
   "type": "module",
   "bin": {
-    "task-master": "bin/task-master.js",
-    "task-master-mcp": "mcp-server/server.js"
+    "ai-task-generator": "bin/ai-task-generator.js",
+    "ai-task-generator-mcp": "mcp-server/server.js"
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
@@ -15,7 +15,7 @@
     "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage",
     "prepare-package": "node scripts/prepare-package.js",
     "prepublishOnly": "npm run prepare-package",
-    "prepare": "chmod +x bin/task-master.js mcp-server/server.js",
+    "prepare": "chmod +x bin/ai-task-generator.js mcp-server/server.js",
     "changeset": "changeset",
     "release": "changeset publish",
     "inspector": "npx @modelcontextprotocol/inspector node mcp-server/server.js",
@@ -29,6 +29,7 @@
   },
   "keywords": [
     "claude",
+    "openai",
     "task",
     "management",
     "ai",
@@ -39,7 +40,7 @@
     "mcp",
     "context"
   ],
-  "author": "Asım Sinan Yüksel",
+  "revision_author": "Asım Sinan Yüksel",
   "original_author": "Eyal Toledano",
   "license": "MIT WITH Commons-Clause",
   "dependencies": {
@@ -66,21 +67,13 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/asimsinan/asy-task-manager.git"
-  },
-  "homepage": "https://github.com/asimsinan/asy-task-manager#readme",
-  "bugs": {
-    "url": "https://github.com/asimsinan/asy-task-manager/issues"
-  },
   "files": [
     "scripts/init.js",
     "scripts/dev.js",
     "scripts/modules/**",
     "assets/**",
     ".cursor/**",
-    "README-task-master.md",
+    "README.md",
     "index.js",
     "bin/**",
     "mcp-server/**"

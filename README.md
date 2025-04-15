@@ -1,9 +1,14 @@
-# ASY TASK MANAGER
+# AI TASK GENERATOR
 
 ## Fork of Task Master by [@eyaltoledano](https://github.com/eyaltoledano/claude-task-master). Added support for OPENAI
 
 
 A task management system for AI-driven development with Claude and OpenAI, designed to work seamlessly with Cursor AI.
+
+## To-Do
+- Make it work with all other AI providers
+- Add command support for Turkish language
+
 
 ## Requirements
 
