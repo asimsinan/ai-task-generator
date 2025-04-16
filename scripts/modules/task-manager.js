@@ -144,37 +144,34 @@ async function parsePRD(
 		// Read the PRD content
 		const prdContent = fs.readFileSync(prdPath, 'utf8');
 
-		// Determine which AI model to use based on configuration or environment variables
+		// Use getAvailableAIModel to automatically select the best model (now defaults to OpenAI)
+		const { type, client } = getAvailableAIModel();
 		let tasksData;
-		const useClaude = preferClaude || 
-			process.env.PREFER_CLAUDE === 'true' || 
-			session?.env?.PREFER_CLAUDE === 'true';
 
-		if (useClaude && (process.env.ANTHROPIC_API_KEY || session?.env?.ANTHROPIC_API_KEY)) {
-			report('Using Claude to generate tasks', 'info');
-			
-			// If we already have an AI client use it, otherwise we'll get a new one in callClaude
-			tasksData = await callClaude(
-				prdContent,
-				prdPath,
-				numTasks,
-				0,
-				{ reportProgress, mcpLog, session },
-				aiClient,
-				modelConfig
-			);
-		} else {
-			// Default to OpenAI
+		if (type === 'openai') {
 			report('Using OpenAI to generate tasks', 'info');
 			
-			// Call OpenAI to generate tasks, passing the provided AI client if available
+			// Call OpenAI to generate tasks
 			tasksData = await callOpenAI(
 				prdContent,
 				prdPath,
 				numTasks,
 				0,
 				{ reportProgress, mcpLog, session },
-				aiClient,
+				client,
+				modelConfig
+			);
+		} else {
+			report('Using Claude to generate tasks (OpenAI not available)', 'info');
+			
+			// Call Claude as fallback
+			tasksData = await callClaude(
+				prdContent,
+				prdPath,
+				numTasks,
+				0,
+				{ reportProgress, mcpLog, session },
+				client,
 				modelConfig
 			);
 		}
@@ -2604,13 +2601,18 @@ async function expandTask(
 			}
 
 			if (!useResearch) {
-				report('Using regular Claude for generating subtasks');
-
-				// Use our getConfiguredAnthropicClient function instead of getAnthropicClient
-				const client = getConfiguredAnthropicClient(session);
-
-				// Build the system prompt
-				const systemPrompt = `You are an AI assistant helping with task breakdown for software development. 
+				// Check if OpenAI should be preferred based on environment settings
+				const preferOpenAI = session?.env?.PREFER_OPENAI === 'true' || 
+					process.env.PREFER_OPENAI === 'true' || false;
+				
+				// Get the best available AI model based on preferences
+				const { type, client } = getAvailableAIModel({ preferOpenAI });
+				
+				if (type === 'openai') {
+					report('Using OpenAI for generating subtasks');
+					
+					// Build the system prompt for OpenAI
+					const systemPrompt = `You are an AI assistant helping with task breakdown for software development. 
 You need to break down a high-level task into ${subtaskCount} specific subtasks that can be implemented one by one.
 
 Subtasks should:
@@ -2629,11 +2631,85 @@ For each subtask, provide:
 
 Each subtask should be implementable in a focused coding session.`;
 
-				const contextPrompt = additionalContext
-					? `\n\nAdditional context to consider: ${additionalContext}`
-					: '';
+					const contextPrompt = additionalContext
+						? `\n\nAdditional context to consider: ${additionalContext}`
+						: '';
 
-				const userPrompt = `Please break down this task into ${subtaskCount} specific, actionable subtasks:
+					const userPrompt = `Please break down this task into ${subtaskCount} specific, actionable subtasks:
+
+Task ID: ${task.id}
+Title: ${task.title}
+Description: ${task.description}
+Current details: ${task.details || 'None provided'}
+${contextPrompt}
+
+Return exactly ${subtaskCount} subtasks with the following JSON structure:
+[
+  {
+    "id": ${nextSubtaskId},
+    "title": "First subtask title",
+    "description": "Detailed description",
+    "dependencies": [], 
+    "details": "Implementation details"
+  },
+  ...more subtasks...
+]
+
+Note on dependencies: Subtasks can depend on other subtasks with lower IDs. Use an empty array if there are no dependencies.`;
+					
+					// Use OpenAI to generate subtasks
+					const completion = await client.chat.completions.create({
+						model: session?.env?.OPENAI_MODEL || process.env.OPENAI_MODEL || 'gpt-4o',
+						messages: [
+							{ role: "system", content: systemPrompt },
+							{ role: "user", content: userPrompt }
+						],
+						temperature: parseFloat(session?.env?.OPENAI_TEMPERATURE || process.env.OPENAI_TEMPERATURE || '0.2'),
+						max_tokens: parseInt(session?.env?.OPENAI_MAX_TOKENS || process.env.OPENAI_MAX_TOKENS || '4096', 10)
+					});
+					
+					// Parse the response content
+					const responseText = completion.choices[0].message.content;
+					
+					// Parse the subtasks from the response
+					generatedSubtasks = parseSubtasksFromText(
+						responseText,
+						nextSubtaskId,
+						subtaskCount,
+						task.id
+					);
+					
+				} else {
+					report('Using regular Claude for generating subtasks');
+					
+					// Use Claude client for task generation
+					const claudeClient = getConfiguredAnthropicClient(session);
+
+					// Build the system prompt
+					const systemPrompt = `You are an AI assistant helping with task breakdown for software development. 
+You need to break down a high-level task into ${subtaskCount} specific subtasks that can be implemented one by one.
+
+Subtasks should:
+1. Be specific and actionable implementation steps
+2. Follow a logical sequence
+3. Each handle a distinct part of the parent task
+4. Include clear guidance on implementation approach
+5. Have appropriate dependency chains between subtasks
+6. Collectively cover all aspects of the parent task
+
+For each subtask, provide:
+- A clear, specific title
+- Detailed implementation steps
+- Dependencies on previous subtasks
+- Testing approach
+
+Each subtask should be implementable in a focused coding session.`;
+
+					const contextPrompt = additionalContext
+						? `\n\nAdditional context to consider: ${additionalContext}`
+						: '';
+
+					const userPrompt = `Please break down this task into ${subtaskCount} specific, actionable subtasks:
 
 Task ID: ${task.id}
 Title: ${task.title}
@@ -2655,30 +2731,31 @@ Return exactly ${subtaskCount} subtasks with the following JSON structure:
 
 Note on dependencies: Subtasks can depend on other subtasks with lower IDs. Use an empty array if there are no dependencies.`;
 
-				// Prepare API parameters
-				const apiParams = {
-					model: session?.env?.ANTHROPIC_MODEL || CONFIG.model,
-					max_tokens: session?.env?.MAX_TOKENS || CONFIG.maxTokens,
-					temperature: session?.env?.TEMPERATURE || CONFIG.temperature,
-					system: systemPrompt,
-					messages: [{ role: 'user', content: userPrompt }]
-				};
+					// Prepare API parameters
+					const apiParams = {
+						model: session?.env?.ANTHROPIC_MODEL || CONFIG.model,
+						max_tokens: session?.env?.MAX_TOKENS || CONFIG.maxTokens,
+						temperature: session?.env?.TEMPERATURE || CONFIG.temperature,
+						system: systemPrompt,
+						messages: [{ role: 'user', content: userPrompt }]
+					};
 
-				// Call the streaming API using our helper
-				const responseText = await _handleAnthropicStream(
-					client,
-					apiParams,
-					{ reportProgress, mcpLog, silentMode: isSilentMode() }, // Pass isSilentMode() directly
-					!isSilentMode() // Only use CLI mode if not in silent mode
-				);
+					// Call the streaming API using our helper
+					const responseText = await _handleAnthropicStream(
+						claudeClient,
+						apiParams,
+						{ reportProgress, mcpLog, silentMode: isSilentMode() }, // Pass isSilentMode() directly
+						!isSilentMode() // Only use CLI mode if not in silent mode
+					);
 
-				// Parse the subtasks from the response
-				generatedSubtasks = parseSubtasksFromText(
-					responseText,
-					nextSubtaskId,
-					subtaskCount,
-					task.id
-				);
+					// Parse the subtasks from the response
+					generatedSubtasks = parseSubtasksFromText(
+						responseText,
+						nextSubtaskId,
+						subtaskCount,
+						task.id
+					);
+				}
 			}
 
 			// Add the generated subtasks to the task
@@ -5687,23 +5764,6 @@ async function getSubtasksFromAI(
 	mcpLog = null
 ) {
 	try {
-		// Get the configured client
-		const client = getConfiguredAnthropicClient(session);
-
-		// Prepare API parameters
-		const apiParams = {
-			model: session?.env?.ANTHROPIC_MODEL || CONFIG.model,
-			max_tokens: session?.env?.MAX_TOKENS || CONFIG.maxTokens,
-			temperature: session?.env?.TEMPERATURE || CONFIG.temperature,
-			system:
-				'You are an AI assistant helping with task breakdown for software development.',
-			messages: [{ role: 'user', content: prompt }]
-		};
-
-		if (mcpLog) {
-			mcpLog.info('Calling AI to generate subtasks');
-		}
-
 		let responseText;
 
 		// Call the AI - with research if requested
@@ -5732,18 +5792,55 @@ async function getSubtasksFromAI(
 
 			responseText = result.choices[0].message.content;
 		} else {
-			// Use regular Claude
-			if (mcpLog) {
-				mcpLog.info('Using Claude for generating subtasks');
+			// Get the best available model (will default to OpenAI since we updated getAvailableAIModel)
+			const { type, client } = getAvailableAIModel();
+			
+			if (type === 'openai') {
+				if (mcpLog) {
+					mcpLog.info('Using OpenAI for generating subtasks');
+				}
+				
+				// Use OpenAI
+				const result = await client.chat.completions.create({
+					model: session?.env?.OPENAI_MODEL || process.env.OPENAI_MODEL || 'gpt-4o',
+					messages: [
+						{
+							role: 'system',
+							content: 'You are an AI assistant helping with task breakdown for software development.'
+						},
+						{ role: 'user', content: prompt }
+					],
+					temperature: parseFloat(session?.env?.OPENAI_TEMPERATURE || process.env.OPENAI_TEMPERATURE || '0.2'),
+					max_tokens: parseInt(session?.env?.OPENAI_MAX_TOKENS || process.env.OPENAI_MAX_TOKENS || '4096', 10)
+				});
+				
+				responseText = result.choices[0].message.content;
+			} else {
+				// Fallback to Claude if OpenAI is not available
+				if (mcpLog) {
+					mcpLog.info('Using Claude for generating subtasks (OpenAI not available)');
+				}
+				
+				// Get the configured Claude client
+				const claudeClient = getConfiguredAnthropicClient(session);
+				
+				// Prepare API parameters for Claude
+				const apiParams = {
+					model: session?.env?.ANTHROPIC_MODEL || CONFIG.model,
+					max_tokens: session?.env?.MAX_TOKENS || CONFIG.maxTokens,
+					temperature: session?.env?.TEMPERATURE || CONFIG.temperature,
+					system: 'You are an AI assistant helping with task breakdown for software development.',
+					messages: [{ role: 'user', content: prompt }]
+				};
+				
+				// Call the streaming API
+				responseText = await _handleAnthropicStream(
+					claudeClient,
+					apiParams,
+					{ mcpLog, silentMode: isSilentMode() },
+					!isSilentMode()
+				);
 			}
-
-			// Call the streaming API
-			responseText = await _handleAnthropicStream(
-				client,
-				apiParams,
-				{ mcpLog, silentMode: isSilentMode() },
-				!isSilentMode()
-			);
 		}
 
 		// Ensure we have a valid response

@@ -280,7 +280,7 @@ function findTasksWithNpmConsideration(startDir, log) {
 			try {
 				// Check standard locations in home dir
 				return findTasksJsonInDirectory(
-					path.join(homeDir, '.task-master'),
+					path.join(homeDir, '.ai-task-generator'),
 					null,
 					log
 				);

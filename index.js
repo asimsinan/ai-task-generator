@@ -64,7 +64,7 @@ export const initProject = async (options = {}) => {
 // Export a function to run init as a CLI command
 export const runInitCLI = async () => {
 	// Using spawn to ensure proper handling of stdio and process exit
-	const child = spawn('node', [resolve(__dirname, './scripts/init.js')], {
+	const child = spawn('node', ['--no-deprecation', resolve(__dirname, './scripts/init.js')], {
 		stdio: 'inherit',
 		cwd: process.cwd()
 	});
@@ -108,7 +108,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 		.allowUnknownOption(true)
 		.action(() => {
 			const args = process.argv.slice(process.argv.indexOf('dev') + 1);
-			const child = spawn('node', [devScriptPath, ...args], {
+			const child = spawn('node', ['--no-deprecation', devScriptPath, ...args], {
 				stdio: 'inherit',
 				cwd: process.cwd()
 			});
@@ -123,7 +123,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 		.command('list')
 		.description('List all tasks')
 		.action(() => {
-			const child = spawn('node', [devScriptPath, 'list'], {
+			const child = spawn('node', ['--no-deprecation', devScriptPath, 'list'], {
 				stdio: 'inherit',
 				cwd: process.cwd()
 			});
@@ -137,7 +137,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 		.command('next')
 		.description('Show the next task to work on')
 		.action(() => {
-			const child = spawn('node', [devScriptPath, 'next'], {
+			const child = spawn('node', ['--no-deprecation', devScriptPath, 'next'], {
 				stdio: 'inherit',
 				cwd: process.cwd()
 			});
@@ -151,7 +151,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 		.command('generate')
 		.description('Generate task files')
 		.action(() => {
-			const child = spawn('node', [devScriptPath, 'generate'], {
+			const child = spawn('node', ['--no-deprecation', devScriptPath, 'generate'], {
 				stdio: 'inherit',
 				cwd: process.cwd()
 			});

@@ -1,4 +1,4 @@
-#!/usr/bin/env node --trace-deprecation
+#!/usr/bin/env node --no-deprecation
 
 /**
  * AI Task Generator
@@ -62,12 +62,12 @@ function runDevScript(args) {
 	// For testing: If TEST_MODE is set, just print args and exit
 	if (process.env.TEST_MODE === '1') {
 		console.log('Would execute:');
-		console.log(`node ${devScriptPath} ${args.join(' ')}`);
+		console.log(`node --no-deprecation ${devScriptPath} ${args.join(' ')}`);
 		process.exit(0);
 		return;
 	}
 
-	const child = spawn('node', [devScriptPath, ...args], {
+	const child = spawn('node', ['--no-deprecation', devScriptPath, ...args], {
 		stdio: 'inherit',
 		cwd: process.cwd()
 	});

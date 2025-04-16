@@ -379,7 +379,7 @@ describe('Commands Module', () => {
 					);
 					console.log(
 						chalk.yellow(
-							'Usage example: task-master update-task --id=23 --prompt="Update with new information"'
+							'Usage example: ai-task-generator update-task --id=23 --prompt="Update with new information"'
 						)
 					);
 					process.exit(1);
@@ -397,7 +397,7 @@ describe('Commands Module', () => {
 					if (tasksPath === 'tasks/tasks.json') {
 						console.log(
 							chalk.yellow(
-								'Hint: Run task-master init or task-master parse-prd to create tasks.json first'
+								'Hint: Run ai-task-generator init or ai-task-generator parse-prd to create tasks.json first'
 							)
 						);
 					} else {
@@ -459,7 +459,7 @@ describe('Commands Module', () => {
 				) {
 					console.log(chalk.yellow('\nTo fix this issue:'));
 					console.log(
-						'  1. Run task-master list to see all available task IDs'
+						'  1. Run ai-task-generator list to see all available task IDs'
 					);
 					console.log('  2. Use a valid task ID with the --id parameter');
 				} else if (error.message.includes('API key')) {

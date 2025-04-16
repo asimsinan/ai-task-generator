@@ -79,17 +79,17 @@ function getAvailableAIModel(options = {}) {
 	const { 
 		claudeOverloaded = false, 
 		requiresResearch = false,
-		preferOpenAI = false
+		preferOpenAI = true  // Default to true to prefer OpenAI
 	} = options;
 
-	// Check if OpenAI is preferred
-	if (preferOpenAI && process.env.OPENAI_API_KEY) {
+	// Check if OpenAI is available - make this the default choice
+	if (process.env.OPENAI_API_KEY) {
 		try {
 			const client = getOpenAIClient();
-			log('info', 'Using OpenAI as preferred model');
+			log('info', 'Using OpenAI as default model');
 			return { type: 'openai', client };
 		} catch (error) {
-			log('warn', `OpenAI not available despite being preferred: ${error.message}`);
+			log('warn', `OpenAI not available: ${error.message}`);
 			// Fall through to other options
 		}
 	}
@@ -105,36 +105,7 @@ function getAvailableAIModel(options = {}) {
 		}
 	}
 
-	// Second choice: Claude if not overloaded
-	if (!claudeOverloaded && process.env.ANTHROPIC_API_KEY) {
-		return { type: 'claude', client: anthropic };
-	}
-
-	// Try OpenAI as fallback when Claude is overloaded
-	if (claudeOverloaded && process.env.OPENAI_API_KEY) {
-		try {
-			const client = getOpenAIClient();
-			log('info', 'Claude is overloaded, falling back to OpenAI');
-			return { type: 'openai', client };
-		} catch (error) {
-			log('warn', `OpenAI fallback not available: ${error.message}`);
-			// Fall through to other options
-		}
-	}
-
-	// Third choice: Perplexity as Claude fallback (even if research not required)
-	if (process.env.PERPLEXITY_API_KEY) {
-		try {
-			const client = getPerplexityClient();
-			log('info', 'Claude is overloaded, falling back to Perplexity');
-			return { type: 'perplexity', client };
-		} catch (error) {
-			log('warn', `Perplexity fallback not available: ${error.message}`);
-			// Fall through to Claude anyway with warning
-		}
-	}
-
-	// Last resort: Use Claude even if overloaded (might fail)
+	// Last resort: Use Claude if available
 	if (process.env.ANTHROPIC_API_KEY) {
 		if (claudeOverloaded) {
 			log(
@@ -142,12 +113,13 @@ function getAvailableAIModel(options = {}) {
 				'Claude is overloaded but no alternatives are available. Proceeding with Claude anyway.'
 			);
 		}
+		log('info', 'Using Claude as fallback model since OpenAI is not available');
 		return { type: 'claude', client: anthropic };
 	}
 
 	// No models available
 	throw new Error(
-		'No AI models available. Please set ANTHROPIC_API_KEY, OPENAI_API_KEY, and/or PERPLEXITY_API_KEY.'
+		'No AI models available. Please set OPENAI_API_KEY, ANTHROPIC_API_KEY, and/or PERPLEXITY_API_KEY.'
 	);
 }
 

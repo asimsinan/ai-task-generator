@@ -1,13 +1,13 @@
 # AI TASK GENERATOR
 
-## Fork of AI Task Generator by [@eyaltoledano](https://github.com/eyaltoledano/claude-ai-task-generator). Added support for OPENAI
+## Fork of AI Task Generator by [@eyaltoledano](https://github.com/eyaltoledano/claude-ai-task-generator). 
+* Added support for OPENAI
 
 
 A task management system for AI-driven development with Claude and OpenAI, designed to work seamlessly with Cursor AI.
 
 ## To-Do
 - Make it work with all other AI providers
-- Add command support for Turkish language
 
 
 ## Requirements
