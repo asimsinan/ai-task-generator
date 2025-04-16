@@ -3682,6 +3682,9 @@ async function analyzeTaskComplexity(
 	const modelOverride = options.model;
 	const thresholdScore = parseFloat(options.threshold || '5');
 	const useResearch = options.research || false;
+	
+	// Check if OpenAI is preferred (from environment variables or session)
+	const preferOpenAI = process.env.PREFER_OPENAI === 'true' || session?.env?.PREFER_OPENAI === true;
 
 	// Determine output format based on mcpLog presence (simplification)
 	const outputFormat = mcpLog ? 'json' : 'text';
@@ -3798,25 +3801,81 @@ async function analyzeTaskComplexity(
 		let streamingInterval = null;
 
 		try {
-			// If research flag is set, use Perplexity first
-			if (useResearch) {
+			// If OpenAI is preferred, use it first
+			if (preferOpenAI && process.env.OPENAI_API_KEY) {
+				reportLog('Using OpenAI for task complexity analysis (preferred)', 'info');
+				
+				if (outputFormat === 'text') {
+					console.log(chalk.blue('Using OpenAI for task complexity analysis...'));
+				}
+				
 				try {
-					reportLog(
-						'Using Perplexity AI for research-backed complexity analysis...',
-						'info'
-					);
-
-					// Only show UI elements for text output (CLI)
+					// Get OpenAI client
+					const { client } = getAvailableAIModel({ preferOpenAI: true });
+					
+					// Call OpenAI API
+					const result = await client.chat.completions.create({
+						model: process.env.OPENAI_MODEL || session?.env?.OPENAI_MODEL || 'gpt-4o',
+						messages: [
+							{
+								role: 'system',
+								content: 'You are an expert software architect and project manager analyzing task complexity. Respond only with valid JSON.'
+							},
+							{ role: 'user', content: prompt }
+						],
+						temperature: parseFloat(process.env.OPENAI_TEMPERATURE || session?.env?.OPENAI_TEMPERATURE || '0.2'),
+						max_tokens: parseInt(process.env.OPENAI_MAX_TOKENS || session?.env?.OPENAI_MAX_TOKENS || '4096', 10)
+					});
+					
+					fullResponse = result.choices[0].message.content;
+					
+					reportLog('Successfully generated complexity analysis with OpenAI', 'success');
+					
 					if (outputFormat === 'text') {
-						console.log(
-							chalk.blue(
-								'Using Perplexity AI for research-backed complexity analysis...'
-							)
-						);
+						console.log(chalk.green('Successfully generated complexity analysis with OpenAI'));
 					}
+					
+					if (loadingIndicator) {
+						stopLoadingIndicator(loadingIndicator);
+						loadingIndicator = null;
+					}
+				} catch (openaiError) {
+					reportLog(`Error using OpenAI for complexity analysis: ${openaiError.message}`, 'error');
+					
+					if (outputFormat === 'text') {
+						console.log(chalk.red(`OpenAI error: ${openaiError.message}`));
+						console.log(chalk.yellow('Falling back to alternative methods...'));
+					}
+					
+					// Fall back to regular flow (will try Perplexity for research or Claude)
+					await fallbackToAlternatives();
+				}
+			} else {
+				// If OpenAI is not preferred, follow the original flow
+				await fallbackToAlternatives();
+			}
+			
+			// Helper function to use the original flow (Perplexity for research or Claude)
+			async function fallbackToAlternatives() {
+				// If research flag is set, use Perplexity first
+				if (useResearch) {
+					try {
+						reportLog(
+							'Using Perplexity AI for research-backed complexity analysis...',
+							'info'
+						);
 
-					// Modify prompt to include more context for Perplexity and explicitly request JSON
-					const researchPrompt = `You are conducting a detailed analysis of software development tasks to determine their complexity and how they should be broken down into subtasks.
+						// Only show UI elements for text output (CLI)
+						if (outputFormat === 'text') {
+							console.log(
+								chalk.blue(
+									'Using Perplexity AI for research-backed complexity analysis...'
+								)
+							);
+						}
+
+						// Modify prompt to include more context for Perplexity and explicitly request JSON
+						const researchPrompt = `You are conducting a detailed analysis of software development tasks to determine their complexity and how they should be broken down into subtasks.
 
 Please research each task thoroughly, considering best practices, industry standards, and potential implementation challenges before providing your analysis.
 
@@ -3839,78 +3898,79 @@ Your response must be a clean JSON array only, following exactly this format:
 
 DO NOT include any text before or after the JSON array. No explanations, no markdown formatting.`;
 
-					const result = await perplexity.chat.completions.create({
-						model:
-							process.env.PERPLEXITY_MODEL ||
-							session?.env?.PERPLEXITY_MODEL ||
-							'sonar-pro',
-						messages: [
-							{
-								role: 'system',
-								content:
-									'You are a technical analysis AI that only responds with clean, valid JSON. Never include explanatory text or markdown formatting in your response.'
-							},
-							{
-								role: 'user',
-								content: researchPrompt
-							}
-						],
-						temperature: session?.env?.TEMPERATURE || CONFIG.temperature,
-						max_tokens: session?.env?.MAX_TOKENS || CONFIG.maxTokens
-					});
+						const result = await perplexity.chat.completions.create({
+							model:
+								process.env.PERPLEXITY_MODEL ||
+								session?.env?.PERPLEXITY_MODEL ||
+								'sonar-pro',
+							messages: [
+								{
+									role: 'system',
+									content:
+										'You are a technical analysis AI that only responds with clean, valid JSON. Never include explanatory text or markdown formatting in your response.'
+								},
+								{
+									role: 'user',
+									content: researchPrompt
+								}
+							],
+							temperature: session?.env?.TEMPERATURE || CONFIG.temperature,
+							max_tokens: session?.env?.MAX_TOKENS || CONFIG.maxTokens
+						});
 
-					// Extract the response text
-					fullResponse = result.choices[0].message.content;
-					reportLog(
-						'Successfully generated complexity analysis with Perplexity AI',
-						'success'
-					);
-
-					// Only show UI elements for text output (CLI)
-					if (outputFormat === 'text') {
-						console.log(
-							chalk.green(
-								'Successfully generated complexity analysis with Perplexity AI'
-							)
+						// Extract the response text
+						fullResponse = result.choices[0].message.content;
+						reportLog(
+							'Successfully generated complexity analysis with Perplexity AI',
+							'success'
 						);
-					}
 
-					if (streamingInterval) clearInterval(streamingInterval);
+						// Only show UI elements for text output (CLI)
+						if (outputFormat === 'text') {
+							console.log(
+								chalk.green(
+									'Successfully generated complexity analysis with Perplexity AI'
+								)
+							);
+						}
 
-					// Stop loading indicator if it was created
-					if (loadingIndicator) {
-						stopLoadingIndicator(loadingIndicator);
-						loadingIndicator = null;
-					}
+						if (streamingInterval) clearInterval(streamingInterval);
 
-					// ALWAYS log the first part of the response for debugging
-					if (outputFormat === 'text') {
-						console.log(chalk.gray('Response first 200 chars:'));
-						console.log(chalk.gray(fullResponse.substring(0, 200)));
-					}
-				} catch (perplexityError) {
-					reportLog(
-						`Falling back to Claude for complexity analysis: ${perplexityError.message}`,
-						'warn'
-					);
+						// Stop loading indicator if it was created
+						if (loadingIndicator) {
+							stopLoadingIndicator(loadingIndicator);
+							loadingIndicator = null;
+						}
 
-					// Only show UI elements for text output (CLI)
-					if (outputFormat === 'text') {
-						console.log(
-							chalk.yellow('Falling back to Claude for complexity analysis...')
+						// ALWAYS log the first part of the response for debugging
+						if (outputFormat === 'text') {
+							console.log(chalk.gray('Response first 200 chars:'));
+							console.log(chalk.gray(fullResponse.substring(0, 200)));
+						}
+					} catch (perplexityError) {
+						reportLog(
+							`Falling back to Claude for complexity analysis: ${perplexityError.message}`,
+							'warn'
 						);
-						console.log(
-							chalk.gray('Perplexity error:'),
-							perplexityError.message
-						);
-					}
 
-					// Continue to Claude as fallback
+						// Only show UI elements for text output (CLI)
+						if (outputFormat === 'text') {
+							console.log(
+								chalk.yellow('Falling back to Claude for complexity analysis...')
+							);
+							console.log(
+								chalk.gray('Perplexity error:'),
+								perplexityError.message
+							);
+						}
+
+						// Continue to Claude as fallback
+						await useClaudeForComplexityAnalysis();
+					}
+				} else {
+					// Use Claude directly if research flag is not set
 					await useClaudeForComplexityAnalysis();
 				}
-			} else {
-				// Use Claude directly if research flag is not set
-				await useClaudeForComplexityAnalysis();
 			}
 
 			// Helper function to use Claude for complexity analysis

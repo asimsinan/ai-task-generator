@@ -1,6 +1,6 @@
 {
   "name": "ai-task-generator",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "description": "A task management system for ambitious AI-driven development that doesn't overwhelm and confuse Cursor.",
   "main": "index.js",
   "type": "module",
@@ -59,7 +59,7 @@
     "fuse.js": "^7.0.0",
     "gradient-string": "^3.0.0",
     "helmet": "^8.1.0",
-    "inquirer": "^12.5.0",
+    "inquirer": "^12.5.2",
     "jsonwebtoken": "^9.0.2",
     "lru-cache": "^10.2.0",
     "openai": "^4.89.0",
