@@ -1,6 +1,7 @@
 # AI TASK GENERATOR
 
-## Fork of Claude AI Task Master by [@eyaltoledano]([https://github.com/eyaltoledano/claude-ai-task-generator](https://github.com/eyaltoledano/claude-task-master)). 
+## Fork of Claude AI Task Master by [@eyaltoledano]([https://github.com/eyaltoledano/claude-ai-task-master](https://github.com/eyaltoledano/claude-task-master)). 
+Github address: [AI Task Generator]([https://github.com/asimsinan/ai-task-generator](https://github.com/asimsinan/ai-task-generator))
 * Added support for OPENAI
 
 
